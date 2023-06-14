@@ -13,16 +13,31 @@ module.exports = (sequelize, DataTypes) => {
 			this.hasMany(models.Customer, { foreignKey: "userId" });
 		}
 	}
-	User.init(
-		{
-			username: DataTypes.STRING,
-			email: DataTypes.STRING,
-			password: DataTypes.STRING,
+	User.init({
+		username: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true, // Ensure uniqueness
+			validate: {
+				notNull: { msg: "Username is required" }, // Validate presence
+			},
 		},
-		{
-			sequelize,
-			modelName: "User",
-		}
-	);
+		email: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true, // Ensure uniqueness
+			validate: {
+				notNull: { msg: "Email is required" }, // Validate presence
+				isEmail: { msg: "Invalid email format" }, // Validate email format
+			},
+		},
+		password: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				notNull: { msg: "Password is required" }, // Validate presence
+			},
+		},
+	});
 	return User;
 };
