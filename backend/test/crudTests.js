@@ -1,7 +1,15 @@
 const { User, Customer, Car, Booking } = require("../models");
-
+// Create a function to test the database
+// NOTE: THIS FUNCTION WILL DELETE ALL DATA IN THE DATABASE THEN REPLACE WITH A SINGLE USER, CUSTOMER, CAR, AND BOOKING
 async function testFunction() {
 	try {
+		// Delete all data in the database
+		await Promise.all([
+			User.destroy({ where: {} }),
+			Customer.destroy({ where: {} }),
+			Car.destroy({ where: {} }),
+			Booking.destroy({ where: {} }),
+		]);
 		// Create a user
 		const user = await User.create({
 			username: "testuser",
