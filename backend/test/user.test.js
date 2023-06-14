@@ -1,4 +1,11 @@
+const { Sequelize } = require("sequelize");
 const { User } = require("../models");
+
+// Create a Sequelize instance
+const sequelize = new Sequelize("rdab", "jondedman", null, {
+	dialect: "psql", // Replace with your preferred database dialect
+	// Add other necessary options here
+});
 
 describe("User Model Validations", () => {
 	test("should not allow duplicate usernames", async () => {
