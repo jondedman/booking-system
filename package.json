@@ -8,35 +8,18 @@
 		"passport": "^0.6.0",
 		"passport-local": "^1.0.0",
 		"pg": "^8.11.0",
-		"react": "^18.2.0",
-		"react-bootstrap": "^2.7.4",
-		"react-dom": "^18.2.0",
 		"sequelize": "^6.32.0",
 		"sequelize-cli": "^6.6.0"
 	},
 	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject",
+		"start": "node backend/index.js",
+		"build": "echo 'No build script specified'",
+		"test": "echo 'No test script specified'",
 		"backend": "node backend/index.js"
 	},
 	"eslintConfig": {
 		"extends": [
-			"react-app",
-			"react-app/jest"
-		]
-	},
-	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
+			"eslint:recommended"
 		]
 	}
 }
