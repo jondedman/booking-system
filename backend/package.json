@@ -14,7 +14,7 @@
 	"scripts": {
 		"start": "node backend/index.js",
 		"build": "echo 'No build script specified'",
-		"test": "echo 'No test script specified'",
+		"test": "jest --detectOpenHandles",
 		"backend": "node backend/index.js"
 	},
 	"eslintConfig": {
