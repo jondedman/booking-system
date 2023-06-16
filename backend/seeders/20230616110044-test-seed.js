@@ -76,11 +76,19 @@ module.exports = {
 			console.log("Seeding bookings...");
 			const bookingsData = [];
 			const cars = await Car.findAll();
+			const users = await User.findAll(); // Fetch all users from the database
 			for (const car of cars) {
+				const randomUser = users[Math.floor(Math.random() * users.length)]; // Select a random user from the fetched users
 				bookingsData.push({
 					carId: car.id,
-					startDate: faker.date.future(),
-					endDate: faker.date.future(),
+					customerId: car.customerId,
+					userId: randomUser.id, // Assign the id of the random user
+					date: faker.date.future(),
+					time: faker.time.recent("abbr"),
+					mot: faker.datatype.boolean(),
+					repair: faker.datatype.boolean(),
+					diagnostic: faker.datatype.boolean(),
+					complete: faker.datatype.boolean(),
 				});
 			}
 			await Booking.bulkCreate(bookingsData);
