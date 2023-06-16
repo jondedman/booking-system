@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
 			email: DataTypes.STRING,
 			mobileNumber: DataTypes.STRING,
 			address: DataTypes.STRING,
-			dateAdded: DataTypes.DATE,
 		},
 		{
 			sequelize,

@@ -1,7 +1,8 @@
 "use strict";
-
+// note - for further fake data i may ned to reinstall faker from the  new communtiy version.
 const faker = require("faker");
 const { User, Customer, Car, Booking } = require("../models");
+const { col } = require("sequelize");
 
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
@@ -46,7 +47,6 @@ module.exports = {
 					email: faker.internet.email(),
 					mobileNumber: faker.phone.phoneNumber(),
 					address: faker.address.streetAddress(),
-					dateAdded: new Date(),
 				});
 			}
 			await Customer.bulkCreate(customersData);
@@ -55,6 +55,24 @@ module.exports = {
 		await (async () => {
 			// Seed cars
 			console.log("Seeding cars...");
+			const colors = [
+				"red",
+				"blue",
+				"green",
+				"yellow",
+				"black",
+				"white",
+				"silver",
+				"lightgray",
+				"silver",
+				"darkgray",
+				"gray",
+				"dimgray",
+				"lightslategray",
+				"slategray",
+				"darkslategray",
+				"black",
+			];
 			const carsData = [];
 			const customers = await Customer.findAll();
 			for (const customer of customers) {
@@ -63,7 +81,7 @@ module.exports = {
 					make: faker.vehicle.manufacturer(),
 					model: faker.vehicle.model(),
 					year: faker.datatype.number({ min: 2000, max: 2023 }),
-					color: faker.commerce.color(),
+					colour: colors[Math.floor(Math.random() * colors.length)],
 					registration: faker.vehicle.vrm(),
 					lastMot: faker.datatype.number({ min: 2020, max: 2023 }),
 				});
@@ -84,6 +102,7 @@ module.exports = {
 					customerId: car.customerId,
 					userId: randomUser.id, // Assign the id of the random user
 					date: faker.date.future(),
+					// note this is depreacted, but use it for now
 					time: faker.time.recent("abbr"),
 					mot: faker.datatype.boolean(),
 					repair: faker.datatype.boolean(),
