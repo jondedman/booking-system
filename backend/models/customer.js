@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
 			this.hasMany(models.Booking, { foreignKey: "customerId" });
 		}
 	}
+	//test
 	Customer.init(
 		{
 			firstName: DataTypes.STRING,
