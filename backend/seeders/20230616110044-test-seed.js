@@ -6,7 +6,7 @@ const { User, Customer, Car, Booking } = require("../models");
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
 		// Revert seed logic in reverse order
-
+		console.log("cleaning up...");
 		// Revert bookings
 		await Booking.destroy({ where: {} });
 
