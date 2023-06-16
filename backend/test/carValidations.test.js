@@ -65,14 +65,8 @@ describe("Car Model Validations", () => {
 	});
 
 	test("should belong to a customer", async () => {
-		const customer = await Customer.create({
-			firstName: "John",
-			lastName: "Doe",
-			email: "test@example.com",
-			mobileNumber: "1234567890",
-			address: "123 Street, City",
-			dateAdded: new Date(),
-		});
+		// Select the first customer from the database
+		const customer = await Customer.findOne();
 
 		// Create a car associated with the customer
 		const car = await Car.create({

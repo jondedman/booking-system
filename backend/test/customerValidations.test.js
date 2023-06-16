@@ -61,7 +61,6 @@ describe("Customer Model Validations", () => {
 				lastName: "Doe",
 				email: "test@example.com",
 				address: "123 Street, City",
-				dateAdded: new Date(),
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeDatabaseError");
