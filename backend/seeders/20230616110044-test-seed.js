@@ -1,0 +1,81 @@
+const faker = require("faker");
+const { User, Customer, Car, Booking } = require("../models");
+
+module.exports = {
+	async up(queryInterface, Sequelize) {
+		// Seed users
+		const usersData = [];
+		for (let i = 0; i < 10; i++) {
+			usersData.push({
+				username: faker.internet.userName(),
+				email: faker.internet.email(),
+				password: "12345678",
+			});
+		}
+		await User.bulkCreate(usersData);
+
+		// Seed customers
+		const customersData = [];
+		const users = await User.findAll();
+		for (const user of users) {
+			customersData.push({
+				userId: user.id,
+				firstName: faker.name.firstName(),
+				lastName: faker.name.lastName(),
+				email: faker.internet.email(),
+				mobileNumber: faker.phone.phoneNumber(),
+				address: faker.address.streetAddress(),
+				dateAdded: new Date(),
+			});
+		}
+		await Customer.bulkCreate(customersData);
+
+		// Seed cars
+		const carsData = [];
+		const customers = await Customer.findAll();
+		for (const customer of customers) {
+			carsData.push({
+				customerId: customer.id,
+				make: faker.vehicle.manufacturer(),
+				model: faker.vehicle.model(),
+				year: faker.datatype.number({ min: 2000, max: 2023 }),
+				color: faker.commerce.color(),
+				registration: faker.vehicle.vrm(),
+				lastMot: faker.datatype.number({ min: 2020, max: 2023 }),
+			});
+		}
+		await Car.bulkCreate(carsData);
+
+		// Seed bookings
+		const bookingsData = [];
+		const cars = await Car.findAll();
+		for (const car of cars) {
+			bookingsData.push({
+				carId: car.id,
+				startDate: faker.date.future(),
+				endDate: faker.date.future(),
+			});
+		}
+		await Booking.bulkCreate(bookingsData);
+
+		// Additional seed logic if needed
+	},
+
+	async down(queryInterface, Sequelize) {
+		// Revert seed logic in reverse order
+
+		// Revert bookings
+		await Booking.destroy({ where: {} });
+
+		// Revert cars
+		await Car.destroy({ where: {} });
+
+		// Revert customers
+		await Customer.destroy({ where: {} });
+
+		// Revert users
+		await User.destroy({ where: {} });
+
+		// Additional revert seed logic if needed
+	},
+};
