@@ -22,13 +22,6 @@ describe("Booking Model", () => {
 
 	describe("Validations", () => {
 		test("should not allow booking without a date", async () => {
-			// expect.assertions(1);
-			// Retrieve a random user from the database
-			// const user = await User.findOne({ order: [["random()", "ASC"]] });
-			// // Retrieve a random customer from the database
-			// const customer = await Customer.findOne({ order: [["random()", "ASC"]] });
-			// // Retrieve a random car from the database
-			// const car = await Car.findOne({ order: [["random()", "ASC"]] });
 			const user = await User.findOne({
 				order: sequelize.literal("random()"),
 			});

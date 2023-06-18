@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 	class Booking extends Model {
 		static associate(models) {
 			this.belongsTo(models.User, { foreignKey: "userId" });
-			this.belongsTo(models.Car, { foreignKey: "carId" });
+			this.belongsTo(models.Vehicle, { foreignKey: "vehicleId" });
 			this.belongsTo(models.Customer, { foreignKey: "customerId" });
 		}
 	}
@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
 				},
 			},
 
-			carId: {
+			vehicleId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},

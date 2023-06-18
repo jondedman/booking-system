@@ -1,7 +1,7 @@
 "use strict";
 // note - for further fake data i may ned to reinstall faker from the  new communtiy version.
 const faker = require("faker");
-const { User, Customer, Car, Booking } = require("../models");
+const { User, Customer, Vehicle, Booking } = require("../models");
 const { col } = require("sequelize");
 
 module.exports = {
@@ -11,8 +11,8 @@ module.exports = {
 		// Revert bookings
 		await Booking.destroy({ where: {} });
 
-		// Revert cars
-		await Car.destroy({ where: {} });
+		// Revert vehicles
+		await Vehicle.destroy({ where: {} });
 
 		// Revert customers
 		await Customer.destroy({ where: {} });
@@ -53,8 +53,8 @@ module.exports = {
 		})();
 
 		await (async () => {
-			// Seed cars
-			console.log("Seeding cars...");
+			// Seed vehicles
+			console.log("Seeding vehicles...");
 			const colors = [
 				"red",
 				"blue",
@@ -73,10 +73,10 @@ module.exports = {
 				"darkslategray",
 				"black",
 			];
-			const carsData = [];
+			const vehiclesData = [];
 			const customers = await Customer.findAll();
 			for (const customer of customers) {
-				carsData.push({
+				vehiclesData.push({
 					customerId: customer.id,
 					make: faker.vehicle.manufacturer(),
 					model: faker.vehicle.model(),
@@ -86,20 +86,20 @@ module.exports = {
 					lastMot: faker.datatype.number({ min: 2020, max: 2023 }),
 				});
 			}
-			await Car.bulkCreate(carsData);
+			await Vehicle.bulkCreate(vehiclesData);
 		})();
 
 		await (async () => {
 			// Seed bookings
 			console.log("Seeding bookings...");
 			const bookingsData = [];
-			const cars = await Car.findAll();
+			const vehicles = await Vehicle.findAll();
 			const users = await User.findAll(); // Fetch all users from the database
-			for (const car of cars) {
+			for (const vehicle of vehicles) {
 				const randomUser = users[Math.floor(Math.random() * users.length)]; // Select a random user from the fetched users
 				bookingsData.push({
-					carId: car.id,
-					customerId: car.customerId,
+					vehicleId: vehicle.id,
+					customerId: vehicle.customerId,
 					userId: randomUser.id, // Assign the id of the random user
 					date: faker.date.future(),
 					// note this is depreacted, but use it for now
@@ -122,8 +122,8 @@ module.exports = {
 		// Revert bookings
 		await Booking.destroy({ where: {} });
 
-		// Revert cars
-		await Car.destroy({ where: {} });
+		// Revert vehicles
+		await Vehicle.destroy({ where: {} });
 
 		// Revert customers
 		await Customer.destroy({ where: {} });
