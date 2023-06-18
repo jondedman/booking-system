@@ -25,6 +25,22 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
 			},
+			parts: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+			},
+			labor: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+			},
+			quote: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+			},
+			notes: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
 			date: {
 				type: DataTypes.DATE,
 				allowNull: false,
