@@ -108,6 +108,10 @@ module.exports = {
 					repair: faker.datatype.boolean(),
 					diagnostic: faker.datatype.boolean(),
 					complete: faker.datatype.boolean(),
+					quote: faker.datatype.number({ min: 100, max: 1000 }),
+					parts: faker.datatype.number({ min: 100, max: 1000 }),
+					labor: faker.datatype.number({ min: 100, max: 1000 }),
+					notes: faker.lorem.sentence(),
 				});
 			}
 			await Booking.bulkCreate(bookingsData);
