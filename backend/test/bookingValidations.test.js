@@ -1,5 +1,5 @@
 const { sequelize } = require("../models");
-const { Booking, User, Car, Customer } = require("../models");
+const { Booking, User, Vehicle, Customer } = require("../models");
 
 describe("Booking Model", () => {
 	beforeAll(async () => {
@@ -11,7 +11,7 @@ describe("Booking Model", () => {
 	// 	// Clear the database before each test
 	// 	await Booking.destroy({ truncate: true });
 	// 	await User.destroy({ truncate: true });
-	// 	await Car.destroy({ truncate: true });
+	// 	await Vehicle.destroy({ truncate: true });
 	// 	await Customer.destroy({ truncate: true });
 	// });
 
@@ -28,7 +28,7 @@ describe("Booking Model", () => {
 			const customer = await Customer.findOne({
 				order: sequelize.literal("random()"),
 			});
-			const car = await Car.findOne({
+			const vehicle = await Vehicle.findOne({
 				order: sequelize.literal("random()"),
 			});
 			try {
@@ -38,7 +38,7 @@ describe("Booking Model", () => {
 					diagnostic: false,
 					time: "10:00:00",
 					complete: false,
-					carId: car.id,
+					vehicleId: vehicle.id,
 					customerId: customer.id,
 					userId: user.id,
 				});
@@ -57,7 +57,7 @@ describe("Booking Model", () => {
 					date: new Date("2020-01-01"),
 					time: "10:00:00",
 					complete: false,
-					carId: 1,
+					vehicleId: 1,
 					customerId: 1,
 					userId: 1,
 				});
@@ -77,7 +77,7 @@ describe("Booking Model", () => {
 					diagnostic: false,
 					date: new Date("2025-01-01"),
 					complete: false,
-					carId: 1,
+					vehicleId: 1,
 					customerId: 1,
 					userId: 1,
 				});
@@ -97,7 +97,7 @@ describe("Booking Model", () => {
 					diagnostic: false,
 					date: new Date("2025-01-01"),
 					complete: false,
-					carId: 1,
+					vehicleId: 1,
 					customerId: 1,
 					userId: 1,
 				});
@@ -120,7 +120,7 @@ describe("Booking Model", () => {
 					date: futureDate,
 					time: "10:00:00",
 					complete: true,
-					carId: 1,
+					vehicleId: 1,
 					customerId: 1,
 					userId: 1,
 				});
@@ -140,7 +140,7 @@ describe("Booking Model", () => {
 			const customer = await Customer.findOne({
 				order: sequelize.literal("random()"),
 			});
-			const car = await Car.findOne({
+			const vehicle = await Vehicle.findOne({
 				order: sequelize.literal("random()"),
 			});
 
@@ -151,7 +151,7 @@ describe("Booking Model", () => {
 				date: new Date("2025-01-01"),
 				time: "10:00:00",
 				complete: false,
-				carId: car.id,
+				vehicleId: vehicle.id,
 				customerId: customer.id,
 				userId: user.id,
 			});
@@ -165,15 +165,15 @@ describe("Booking Model", () => {
 			expect(foundBooking.User.email).toBe(user.email);
 		});
 
-		test("should belong to a car", async () => {
-			// abstract out the random selection of a user, customer and car to a function
+		test("should belong to a vehicle", async () => {
+			// abstract out the random selection of a user, customer and vehicle to a function
 			const user = await User.findOne({
 				order: sequelize.literal("random()"),
 			});
 			const customer = await Customer.findOne({
 				order: sequelize.literal("random()"),
 			});
-			const car = await Car.findOne({
+			const vehicle = await Vehicle.findOne({
 				order: sequelize.literal("random()"),
 			});
 
@@ -185,19 +185,19 @@ describe("Booking Model", () => {
 					date: new Date("2025-01-01"),
 					time: "10:00:00",
 					complete: false,
-					carId: car.id,
+					vehicleId: vehicle.id,
 					customerId: customer.id,
 					userId: user.id,
 				},
-				{ include: [{ model: Car }] }
+				{ include: [{ model: Vehicle }] }
 			);
 			const foundBooking = await Booking.findByPk(booking.id, {
-				include: [{ model: Car }],
+				include: [{ model: Vehicle }],
 			});
-			expect(foundBooking.Car.make).toBe(car.make);
-			expect(foundBooking.Car.registration).toBe(car.registration);
-			expect(foundBooking.Car.lastMot).toBeInstanceOf(Date);
-			expect(foundBooking.Car.colour).toBe(car.colour);
+			expect(foundBooking.Vehicle.make).toBe(vehicle.make);
+			expect(foundBooking.Vehicle.registration).toBe(vehicle.registration);
+			expect(foundBooking.Vehicle.lastMot).toBeInstanceOf(Date);
+			expect(foundBooking.Vehicle.colour).toBe(vehicle.colour);
 		});
 
 		test("should belong to a customer", async () => {
@@ -207,7 +207,7 @@ describe("Booking Model", () => {
 			const customer = await Customer.findOne({
 				order: sequelize.literal("random()"),
 			});
-			const car = await Car.findOne({
+			const vehicle = await Vehicle.findOne({
 				order: sequelize.literal("random()"),
 			});
 
@@ -218,7 +218,7 @@ describe("Booking Model", () => {
 				date: new Date("2025-01-01"),
 				time: "10:00:00",
 				complete: false,
-				carId: car.id,
+				vehicleId: vehicle.id,
 				customerId: customer.id,
 				userId: user.id,
 			});
