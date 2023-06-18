@@ -1,11 +1,11 @@
 const { Sequelize } = require("sequelize");
 const { Customer } = require("../models");
 
-// Create a Sequelize instance
-const sequelize = new Sequelize("rdab", "jondedman", null, {
-	dialect: "postgres", // Replace with your preferred database dialect
-	// Add other necessary options here
-});
+// // Create a Sequelize instance
+// const sequelize = new Sequelize("rdab", "jondedman", null, {
+// 	dialect: "postgres", // Replace with your preferred database dialect
+// 	// Add other necessary options here
+// });
 
 describe("Customer Model Validations", () => {
 	test("should require firstName field", async () => {

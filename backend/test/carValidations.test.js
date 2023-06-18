@@ -1,11 +1,11 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const { Car, Customer } = require("../models");
 
-// Create a Sequelize instance
-const sequelize = new Sequelize("rdadb", "jondedman", null, {
-	dialect: "postgres", // Replace with your preferred database dialect
-	// Add other necessary options here
-});
+// // Create a Sequelize instance
+// const sequelize = new Sequelize("rdadb", "jondedman", null, {
+// 	dialect: "postgres", // Replace with your preferred database dialect
+// 	// Add other necessary options here
+// });
 
 describe("Car Model Validations", () => {
 	test("should require make field", async () => {
