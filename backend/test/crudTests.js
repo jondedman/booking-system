@@ -1,4 +1,5 @@
-const { User, Customer, Car, Booking } = require("../models");
+const { User, Customer, Vehicle, Booking } = require("../models");
+const vehicle = require("../models/vehicle");
 
 async function testFunction() {
 	try {
@@ -19,8 +20,8 @@ async function testFunction() {
 			userId: user.id, // Set the userId foreign key
 		});
 
-		// Create a car
-		const car = await Car.create({
+		// Create a vehicle
+		const vehicle = await vehicle.create({
 			make: "Toyota",
 			registration: "ABC123",
 			colour: "Blue",

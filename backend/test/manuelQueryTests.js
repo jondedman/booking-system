@@ -1,5 +1,5 @@
 const { sequelize } = require("../models");
-const { Booking, User, Car, Customer } = require("../models");
+const { Booking, User, Vehicle, Customer } = require("../models");
 
 (async () => {
 	try {
@@ -13,7 +13,7 @@ const { Booking, User, Car, Customer } = require("../models");
 			const user = await User.findByPk(userId, {
 				include: {
 					model: Booking,
-					include: [Car, Customer],
+					include: [Vehicle, Customer],
 				},
 			});
 
@@ -21,13 +21,13 @@ const { Booking, User, Car, Customer } = require("../models");
 				throw new Error("User not found");
 			}
 
-			// Access the booking and car associated with the user
+			// Access the booking and vehicle associated with the user
 			const booking = user.Bookings[0]; // Assuming there is only one booking
 			console.log("Booking:", booking.get({ plain: true })); // Convert to plain object
-			const carMake = booking.Car.make;
-			console.log("Car make:", carMake);
-			const carRegistration = booking.Car.registration;
-			console.log("Car registration:", carRegistration);
+			const vehicleMake = booking.Vehicle.make;
+			console.log("Vehicle make:", vehicleMake);
+			const vehicleRegistration = booking.Vehicle.registration;
+			console.log("Vehicle registration:", vehicleRegistration);
 			// const customer = booking.Customer;
 			// console.log("Customer:", customer);
 			const customerFirstName = booking.Customer.firstName;
