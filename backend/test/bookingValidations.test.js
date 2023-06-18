@@ -1,12 +1,6 @@
 const { sequelize } = require("../models");
 const { Booking, User, Car, Customer } = require("../models");
 
-// Create a Sequelize instance
-// const sequelize = new Sequelize("rdadb", "jondedman", null, {
-// 	dialect: "postgres", // Replace with your preferred database dialect
-// 	// Add other necessary options here
-// });
-
 describe("Booking Model", () => {
 	beforeAll(async () => {
 		// Connect to the database
