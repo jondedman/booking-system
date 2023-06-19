@@ -1,4 +1,3 @@
-const { Sequelize } = require("sequelize");
 const { Customer } = require("../models");
 
 describe("Customer Model Validations", () => {
@@ -13,7 +12,7 @@ describe("Customer Model Validations", () => {
 				dateAdded: new Date(),
 			});
 		} catch (error) {
-			expect(error.name).toBe("SequelizeDatabaseError");
+			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
 
@@ -28,7 +27,7 @@ describe("Customer Model Validations", () => {
 				dateAdded: new Date(),
 			});
 		} catch (error) {
-			expect(error.name).toBe("SequelizeDatabaseError");
+			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
 
@@ -43,7 +42,7 @@ describe("Customer Model Validations", () => {
 				dateAdded: new Date(),
 			});
 		} catch (error) {
-			expect(error.name).toBe("SequelizeDatabaseError");
+			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
 
@@ -57,7 +56,7 @@ describe("Customer Model Validations", () => {
 				address: "123 Street, City",
 			});
 		} catch (error) {
-			expect(error.name).toBe("SequelizeDatabaseError");
+			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
 
@@ -72,7 +71,7 @@ describe("Customer Model Validations", () => {
 				dateAdded: new Date(),
 			});
 		} catch (error) {
-			expect(error.name).toBe("SequelizeDatabaseError");
+			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
 });
