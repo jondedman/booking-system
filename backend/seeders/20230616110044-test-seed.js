@@ -47,6 +47,7 @@ module.exports = {
 					email: faker.internet.email(),
 					mobileNumber: faker.phone.phoneNumber(),
 					address: faker.address.streetAddress(),
+					postcode: faker.address.zipCode(),
 					notes: faker.lorem.sentence(),
 				});
 			}
