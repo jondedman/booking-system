@@ -25,6 +25,7 @@ describe("User Model Validations", () => {
 			expect(error.name).toBe("SequelizeUniqueConstraintError");
 		}
 	});
+
 	test("should not allow duplicate emails", async () => {
 		// expect.assertions(1);
 		try {
@@ -49,6 +50,22 @@ describe("User Model Validations", () => {
 			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
+
+	test("should not allow username less than 3 characters", async () => {
+		try {
+			await User.create({
+				username: "ab",
+				email: "testuser@example.com",
+				password: "password123",
+			});
+		} catch (error) {
+			expect(error.name).toBe("SequelizeValidationError");
+			expect(error.errors[0].message).toBe(
+				"Username must be between 3 and 20 characters"
+			);
+		}
+	});
+
 	test("should require email field", async () => {
 		// expect.assertions(1);
 		try {
@@ -71,6 +88,20 @@ describe("User Model Validations", () => {
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeValidationError");
+		}
+	});
+	test("should not allow password less than 6 characters", async () => {
+		try {
+			await User.create({
+				username: "testuser",
+				email: "testuser@example.com",
+				password: "12345",
+			});
+		} catch (error) {
+			expect(error.name).toBe("SequelizeValidationError");
+			expect(error.errors[0].message).toBe(
+				"Password must be between 6 and 20 characters"
+			);
 		}
 	});
 	test("should require valid email format", async () => {
