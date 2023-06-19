@@ -15,12 +15,44 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	Vehicle.init(
 		{
-			make: DataTypes.STRING,
-			registration: DataTypes.STRING,
-			lastMot: DataTypes.DATE,
-			colour: DataTypes.STRING,
-			notes: DataTypes.STRING,
-			type: DataTypes.STRING,
+			make: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				validate: {
+					notEmpty: true,
+				},
+			},
+			registration: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				unique: true,
+				validate: {
+					notEmpty: true,
+				},
+			},
+			lastMot: {
+				type: DataTypes.DATE,
+				allowNull: false,
+				validate: {
+					isDate: true,
+					isBefore: new Date().toISOString().split("T")[0], // Ensures the date is in the past
+				},
+			},
+			colour: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			notes: {
+				type: DataTypes.STRING,
+				allowNull: true,
+			},
+			type: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				validate: {
+					notEmpty: true,
+				},
+			},
 		},
 		{
 			sequelize,
