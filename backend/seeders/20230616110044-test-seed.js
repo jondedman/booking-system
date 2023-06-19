@@ -47,6 +47,7 @@ module.exports = {
 					email: faker.internet.email(),
 					mobileNumber: faker.phone.phoneNumber(),
 					address: faker.address.streetAddress(),
+					notes: faker.lorem.sentence(),
 				});
 			}
 			await Customer.bulkCreate(customersData);
@@ -78,12 +79,14 @@ module.exports = {
 			for (const customer of customers) {
 				vehiclesData.push({
 					customerId: customer.id,
+					type: faker.vehicle.type(),
 					make: faker.vehicle.manufacturer(),
 					model: faker.vehicle.model(),
 					year: faker.datatype.number({ min: 2000, max: 2023 }),
 					colour: colors[Math.floor(Math.random() * colors.length)],
 					registration: faker.vehicle.vrm(),
 					lastMot: faker.datatype.number({ min: 2020, max: 2023 }),
+					notes: faker.lorem.sentence(),
 				});
 			}
 			await Vehicle.bulkCreate(vehiclesData);
