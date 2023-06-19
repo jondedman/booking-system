@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
 			registration: DataTypes.STRING,
 			lastMot: DataTypes.DATE,
 			colour: DataTypes.STRING,
+			notes: DataTypes.STRING,
+			type: DataTypes.STRING,
 		},
 		{
 			sequelize,
