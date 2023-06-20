@@ -21,7 +21,7 @@ async function testFunction() {
 		});
 
 		// Create a vehicle
-		const vehicle = await vehicle.create({
+		const vehicle = await Vehicle.create({
 			make: "Toyota",
 			registration: "ABC123",
 			colour: "Blue",

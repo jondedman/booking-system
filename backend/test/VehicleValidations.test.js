@@ -36,6 +36,7 @@ describe("Vehicle Model Validations", () => {
 				colour: "Blue",
 				type: "Car",
 			});
+			throw new Error("Expected make field to be required");
 		} catch (error) {
 			expect(error.name).toBe("SequelizeValidationError");
 			expect(error.errors[0].message).toBe(
