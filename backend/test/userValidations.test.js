@@ -133,3 +133,45 @@ describe("User Model Validations", () => {
 		}
 	});
 });
+
+test("should require username field to be non-empty", async () => {
+	try {
+		// Create a user with an empty username
+		await User.create({
+			username: "",
+			email: "test@example.com",
+			password: "password123",
+		});
+	} catch (error) {
+		expect(error.name).toBe("SequelizeValidationError");
+		expect(error.errors[0].message).toBe("Username cannot be empty");
+	}
+});
+
+test("should require email field to be non-empty", async () => {
+	try {
+		// Create a user with an empty email
+		await User.create({
+			username: "testuser",
+			email: "",
+			password: "password123",
+		});
+	} catch (error) {
+		expect(error.name).toBe("SequelizeValidationError");
+		expect(error.errors[0].message).toBe("Email cannot be empty");
+	}
+});
+
+test("should require password field to be non-empty", async () => {
+	try {
+		// Create a user with an empty password
+		await User.create({
+			username: "testuser",
+			email: "test@example.com",
+			password: "",
+		});
+	} catch (error) {
+		expect(error.name).toBe("SequelizeValidationError");
+		expect(error.errors[0].message).toBe("Password cannot be empty");
+	}
+});
