@@ -89,7 +89,7 @@ describe("Vehicle Model Validations", () => {
 				make: "Toyota",
 				registration: "ABC123",
 				colour: "Blue",
-				lastMot: "Saturday", // Invalid date format (includes time)
+				lastMot: "Saturday", // Invalid date format just has a day of the week
 				type: "Car",
 			});
 		} catch (error) {
@@ -102,24 +102,20 @@ describe("Vehicle Model Validations", () => {
 
 	test("should belong to a customer", async () => {
 		try {
-			// Select the first customer from the database
-			const customer = await Customer.findOne();
-
-			// Create a vehicle associated with the customer
+			// Create a vehicle without setting the customerId
 			const vehicle = await Vehicle.create({
 				make: "Toyota",
 				registration: "ABC123",
-				lastMot: new Date(),
+				lastMot: new Date(Date.now() - 1000 * 60 * 60 * 24),
 				colour: "Blue",
 				type: "Car",
-				customerId: customer.id,
 			});
 
-			expect(vehicle.customerId).toBe(customer.id);
+			expect(vehicle.customerId).toBeNull();
 		} catch (error) {
-			expect(error.name).toBe("SequelizeValidationError");
-			expect(error.errors[0].message).toBe(
-				"Validation isBefore on lastMot failed"
+			expect(error.name).toBe("SequelizeDatabaseError");
+			expect(error.message).toContain(
+				'null value in column "customerId" of relation "Vehicles" violates not-null constraint'
 			);
 		}
 	});

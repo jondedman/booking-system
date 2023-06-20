@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				validate: {
 					isDate: true,
+					// Ensures the date is in the past the T splits the date and time and [0] selects the date
 					isBefore: new Date().toISOString().split("T")[0], // Ensures the date is in the past
 				},
 			},
