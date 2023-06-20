@@ -13,30 +13,44 @@ describe("User Model Validations", () => {
 	});
 
 	test("should not allow duplicate usernames", async () => {
-		// expect.assertions(1);
+		// Create a user with an existing username
+		await User.create({
+			username: "existinguser",
+			email: "testuser@example.com",
+			password: "password123",
+		});
+
+		// Try to create another user with the same username
 		try {
-			// Create a user with an existing username
 			await User.create({
 				username: "existinguser",
-				email: "testuser@example.com",
-				password: "password123",
+				email: "anotheruser@example.com",
+				password: "password456",
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeUniqueConstraintError");
+			expect(error.fields).toEqual(["username"]);
 		}
 	});
 
 	test("should not allow duplicate emails", async () => {
-		// expect.assertions(1);
+		// Create a user with an existing email
+		await User.create({
+			username: "testuser",
+			email: "existinguser@example.com",
+			password: "password123",
+		});
+
+		// Try to create another user with the same email
 		try {
-			// Create a user with an existing email
 			await User.create({
-				username: "testuser",
+				username: "anotheruser",
 				email: "existinguser@example.com",
-				password: "password123",
+				password: "password456",
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeUniqueConstraintError");
+			expect(error.fields).toEqual(["email"]);
 		}
 	});
 	test("should require username field", async () => {
