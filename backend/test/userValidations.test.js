@@ -63,6 +63,7 @@ describe("User Model Validations", () => {
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeValidationError");
+			expect(error.errors[0].message).toBe("Username is required");
 		}
 	});
 
@@ -90,6 +91,7 @@ describe("User Model Validations", () => {
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeValidationError");
+			expect(error.errors[0].message).toBe("Email is required");
 		}
 	});
 
@@ -102,6 +104,7 @@ describe("User Model Validations", () => {
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeValidationError");
+			expect(error.errors[0].message).toBe("Password is required");
 		}
 	});
 
@@ -130,6 +133,7 @@ describe("User Model Validations", () => {
 			});
 		} catch (error) {
 			expect(error.name).toBe("SequelizeValidationError");
+			expect(error.errors[0].message).toBe("Invalid email format");
 		}
 	});
 });
