@@ -30,19 +30,43 @@ module.exports = (sequelize, DataTypes) => {
 					notEmpty: true,
 				},
 			},
+			// lastMot: {
+			// 	type: DataTypes.DATE,
+			// 	allowNull: false,
+			// 	validate: {
+			// 		isDate: true,
+			// 		// Ensures the date is in the past the T splits the date and time and [0] selects the date
+			// 		isBefore: new Date().toISOString().split("T")[0], // Ensures the date is in the past
+			// 	},
+			// },
 			lastMot: {
 				type: DataTypes.DATE,
 				allowNull: false,
 				validate: {
-					isDate: true,
-					// Ensures the date is in the past the T splits the date and time and [0] selects the date
-					isBefore: new Date().toISOString().split("T")[0], // Ensures the date is in the past
+					isDate: {
+						msg: "Vehicle.lastMot must be a valid date",
+					},
+					isPastDate(value) {
+						if (new Date(value) >= new Date()) {
+							throw new Error("Vehicle.lastMot must be in the past");
+						}
+					},
+					notEmpty: {
+						msg: "Vehicle.lastMot cannot be empty",
+					},
 				},
 			},
+
 			colour: {
 				type: DataTypes.STRING,
 				allowNull: false,
+				validate: {
+					notEmpty: {
+						msg: "Vehicle.colour cannot be empty",
+					},
+				},
 			},
+
 			notes: {
 				type: DataTypes.STRING,
 				allowNull: true,
