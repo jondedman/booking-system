@@ -7,14 +7,6 @@ describe("Booking Model", () => {
 		await sequelize.authenticate();
 	});
 
-	// beforeEach(async () => {
-	// 	// Clear the database before each test
-	// 	await Booking.destroy({ truncate: true });
-	// 	await User.destroy({ truncate: true });
-	// 	await Vehicle.destroy({ truncate: true });
-	// 	await Customer.destroy({ truncate: true });
-	// });
-
 	afterAll(async () => {
 		// Close the database connection after all tests
 		await sequelize.close();

@@ -111,6 +111,7 @@ module.exports = {
 					mot: faker.datatype.boolean(),
 					repair: faker.datatype.boolean(),
 					diagnostic: faker.datatype.boolean(),
+					arrived: faker.date.recent(),
 					complete: faker.datatype.boolean(),
 					quote: faker.datatype.number({ min: 100, max: 1000 }),
 					parts: faker.datatype.number({ min: 100, max: 1000 }),

@@ -83,6 +83,18 @@ module.exports = (sequelize, DataTypes) => {
 				},
 			},
 
+			arrived: {
+				type: DataTypes.DATE,
+				allowNull: true,
+				validate: {
+					isDate: true,
+					isBefore: {
+						args: new Date().toISOString().split("T")[0], // Ensures the date is in the past
+						msg: "Arrival date must be in the past.",
+					},
+				},
+			},
+
 			vehicleId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
