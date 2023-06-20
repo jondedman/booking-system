@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
 			},
 			colour: {
 				type: DataTypes.STRING,
-				allowNull: true,
+				allowNull: false,
 			},
 			notes: {
 				type: DataTypes.STRING,
