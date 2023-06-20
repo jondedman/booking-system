@@ -53,11 +53,12 @@ describe("User Model Validations", () => {
 			expect(error.fields).toEqual(["email"]);
 		}
 	});
+
 	test("should require username field", async () => {
 		try {
 			// Create a user without a username
 			await User.create({
-				// email: "testuser@example.com",
+				email: "testuser@example.com",
 				password: "password123",
 			});
 		} catch (error) {
@@ -81,7 +82,6 @@ describe("User Model Validations", () => {
 	});
 
 	test("should require email field", async () => {
-		// expect.assertions(1);
 		try {
 			// Create a user without an email
 			await User.create({
@@ -92,8 +92,8 @@ describe("User Model Validations", () => {
 			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
+
 	test("should require password field", async () => {
-		// expect.assertions(1);
 		try {
 			// Create a user without a password
 			await User.create({
@@ -104,6 +104,7 @@ describe("User Model Validations", () => {
 			expect(error.name).toBe("SequelizeValidationError");
 		}
 	});
+
 	test("should not allow password less than 6 characters", async () => {
 		try {
 			await User.create({
@@ -118,8 +119,8 @@ describe("User Model Validations", () => {
 			);
 		}
 	});
+
 	test("should require valid email format", async () => {
-		// expect.assertions(1);
 		try {
 			// Create a user with an invalid email format
 			await User.create({
