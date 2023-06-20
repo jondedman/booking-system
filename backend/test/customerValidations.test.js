@@ -287,4 +287,21 @@ describe("Customer Model Validations", () => {
 			);
 		}
 	});
+
+	test("should require the combination of firstName, lastName, and postcode to be unique", async () => {
+		try {
+			// Create a customer with an existing combination of firstName, lastName, and postcode
+			await Customer.create({
+				firstName: "John",
+				lastName: "Doe",
+				email: "john.doe@example.com",
+				mobileNumber: "1234567890",
+				address: "123 Street, City",
+				postcode: "AB1 2CD",
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.name).toBe("SequelizeDatabaseError");
+		}
+	});
 });
