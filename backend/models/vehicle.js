@@ -27,7 +27,9 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 				unique: true,
 				validate: {
-					notEmpty: true,
+					notEmpty: {
+						msg: "Vehicle.registration cannot be empty",
+					},
 				},
 			},
 			// lastMot: {

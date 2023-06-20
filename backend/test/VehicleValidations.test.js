@@ -166,7 +166,7 @@ test("should require registration field to be not empty", async () => {
 	} catch (error) {
 		expect(error.name).toBe("SequelizeValidationError");
 		expect(error.errors[0].message).toBe(
-			"Validation notEmpty on registration failed"
+			"Vehicle.registration cannot be empty"
 		);
 	}
 });

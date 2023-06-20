@@ -195,6 +195,23 @@ describe("Customer Model Validations", () => {
 		}
 	});
 
+	test("should require mobileNumber field to be unique", async () => {
+		try {
+			// Create a customer with an existing mobileNumber
+			await Customer.create({
+				firstName: "John",
+				lastName: "Doe",
+				email: "kjku@iugk.com",
+				mobileNumber: "1234567890", // Existing mobileNumber
+				address: "123 Street, City",
+				postcode: "AB6 4CD",
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.name).toBe("SequelizeDatabaseError");
+		}
+	});
+
 	test("should require address field", async () => {
 		try {
 			// Create a customer without an address
