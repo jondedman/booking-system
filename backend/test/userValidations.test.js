@@ -57,7 +57,7 @@ describe("User Model Validations", () => {
 		try {
 			// Create a user without a username
 			await User.create({
-				email: "testuser@example.com",
+				// email: "testuser@example.com",
 				password: "password123",
 			});
 		} catch (error) {

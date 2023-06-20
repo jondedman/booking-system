@@ -64,7 +64,7 @@ module.exports = (sequelize) => {
 			indexes: [
 				{
 					unique: true,
-					fields: ["firstName", "lastName", "postcode"], // Define the combination of fields as unique
+					fields: ["firstName", "lastName", "postcode"],
 				},
 			],
 		}
