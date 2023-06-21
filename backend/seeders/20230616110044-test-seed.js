@@ -107,7 +107,7 @@ module.exports = {
 					userId: randomUser.id, // Assign the id of the random user
 					date: faker.date.future(),
 					// note this is depreacted, but use it for now
-					time: faker.time.recent("abbr"),
+					// time: faker.time.recent("abbr"),
 					mot: faker.datatype.boolean(),
 					repair: faker.datatype.boolean(),
 					diagnostic: faker.datatype.boolean(),
