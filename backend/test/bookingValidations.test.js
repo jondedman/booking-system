@@ -12,20 +12,6 @@ describe("Booking Model", () => {
 		await sequelize.close();
 	});
 
-	// find random user, customer, and vehicle
-	async function findDetails() {
-		const user = await User.findOne({
-			order: sequelize.literal("random()"),
-		});
-		const customer = await Customer.findOne({
-			order: sequelize.literal("random()"),
-		});
-		const vehicle = await Vehicle.findOne({
-			order: sequelize.literal("random()"),
-		});
-		return { user, customer, vehicle };
-	}
-
 	describe("Validations", () => {
 		// date validations
 		test("should not allow booking without a date", async () => {
@@ -50,84 +36,98 @@ describe("Booking Model", () => {
 				expect(error.errors[0].message).toBe("Booking.date cannot be null");
 			}
 		});
+
+		test("should not allow booking with a date in the past", async () => {
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: true,
+					repair: false,
+					diagnostic: false,
+					date: new Date("2020-01-01"),
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+				throw new Error("Expected validation error for past date");
+			} catch (error) {
+				expect(error.errors[0].message).toBe(
+					"Booking date must be in the future."
+				);
+			}
+		});
+
+		test("date should not be empty", async () => {
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: false,
+					repair: true,
+					diagnostic: false,
+					date: "",
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+				throw new Error("Expected validation error for empty date");
+			} catch (error) {
+				expect(error.message).toContain("Validation notEmpty on date failed");
+			}
+		});
+
+		test("date should be a valid format", async () => {
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: false,
+					repair: true,
+					diagnostic: true,
+					date: "2022-30-02", // Invalid date format
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+				throw new Error("Expected validation error for invalid date format");
+			} catch (error) {
+				expect(error.errors[0].message).toBe(
+					"Validation isDate on date failed"
+				);
+			}
+		});
+
+		// find random user, customer, and vehicle
+		async function findDetails() {
+			const user = await User.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const customer = await Customer.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const vehicle = await Vehicle.findOne({
+				order: sequelize.literal("random()"),
+			});
+			return { user, customer, vehicle };
+		}
 	});
 });
-
-// 	// 	test("should not allow booking with a date in the past", async () => {
-// 	// 		const { user, customer, vehicle } = await findDetails();
-// 	// 		try {
-// 	// 			await Booking.create({
-// 	// 				mot: true,
-// 	// 				repair: false,
-// 	// 				diagnostic: false,
-// 	// 				date: new Date("2020-01-01"),
-// 	// 				// time: "10:00:00",
-// 	// 				complete: false,
-// 	// 				vehicleId: vehicle.id,
-// 	// 				customerId: customer.id,
-// 	// 				userId: user.id,
-// 	// 				parts: 200,
-// 	// 				labor: 250,
-// 	// 				quote: 450,
-// 	// 				notes: "test notes",
-// 	// 			});
-// 	// 			throw new Error("Expected validation error for past date");
-// 	// 		} catch (error) {
-// 	// 			expect(error.errors[0].message).toBe(
-// 	// 				"Booking date must be in the future."
-// 	// 			);
-// 	// 		}
-// 	// 	});
-
-// 	// 	test("date should not be empty", async () => {
-// 	// 		const { user, customer, vehicle } = await findDetails();
-// 	// 		try {
-// 	// 			await Booking.create({
-// 	// 				mot: false,
-// 	// 				repair: true,
-// 	// 				diagnostic: false,
-// 	// 				date: "",
-// 	// 				// time: "10:00:00",
-// 	// 				complete: false,
-// 	// 				vehicleId: vehicle.id,
-// 	// 				customerId: customer.id,
-// 	// 				userId: user.id,
-// 	// 				parts: 200,
-// 	// 				labor: 250,
-// 	// 				quote: 450,
-// 	// 				notes: "test notes",
-// 	// 			});
-// 	// 			throw new Error("Expected validation error for empty date");
-// 	// 		} catch (error) {
-// 	// 			expect(error.message).toContain("Validation notEmpty on date failed");
-// 	// 		}
-// 	// 	});
-
-// 	// 	test("date should be a valid format", async () => {
-// 	// 		const { user, customer, vehicle } = await findDetails();
-// 	// 		try {
-// 	// 			await Booking.create({
-// 	// 				mot: false,
-// 	// 				repair: true,
-// 	// 				diagnostic: true,
-// 	// 				date: "2022-30-02", // Invalid date format
-// 	// 				// time: "10:00:00",
-// 	// 				complete: false,
-// 	// 				vehicleId: vehicle.id,
-// 	// 				customerId: customer.id,
-// 	// 				userId: user.id,
-// 	// 				parts: 200,
-// 	// 				labor: 250,
-// 	// 				quote: 450,
-// 	// 				notes: "test notes",
-// 	// 			});
-// 	// 			throw new Error("Expected validation error for invalid date format");
-// 	// 		} catch (error) {
-// 	// 			expect(error.errors[0].message).toBe(
-// 	// 				"Validation isDate on date failed"
-// 	// 			);
-// 	// 		}
-// 	// 	});
 
 // 	// 	// complete validations
 // 	// 	test("should not allow complete to be true for future bookings", async () => {

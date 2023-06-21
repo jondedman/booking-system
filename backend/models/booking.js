@@ -44,19 +44,19 @@ module.exports = (sequelize, DataTypes) => {
 			date: {
 				type: DataTypes.DATE,
 				allowNull: false,
-				// validate: {
-				// 	// isFuture(value) {
-				// 	// 	if (value < new Date()) {
-				// 	// 		throw new Error("Booking date must be in the future.");
-				// 	// 	}
-				// 	// },
-				// 	notEmpty: true,
-				// 	// isDate: true,
-				// 	// isAfter: {
-				// 	// 	args: new Date().toISOString().split("T")[0], // Current date
-				// 	// 	msg: "Booking date must be in the future.",
-				// 	// },
-				// },
+				validate: {
+					isFuture(value) {
+						if (value < new Date()) {
+							throw new Error("Booking date must be in the future.");
+						}
+					},
+					notEmpty: true,
+					isDate: true,
+					isAfter: {
+						args: new Date().toISOString().split("T")[0], // Current date
+						msg: "Booking date must be in the future.",
+					},
+				},
 			},
 			complete: {
 				type: DataTypes.BOOLEAN,
