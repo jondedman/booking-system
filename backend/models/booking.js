@@ -58,12 +58,27 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
-			time: {
-				type: DataTypes.TIME,
-				allowNull: function () {
-					return !this.mot; // Only required if mot is selected
-				},
-			},
+			// time: {
+			// 	type: DataTypes.VIRTUAL,
+			// 	allowNull: function () {
+			// 		return !this.mot; // Only required if mot is selected
+			// 	},
+			// 	get() {
+			// 		if (this.date) {
+			// 			const time = this.date.toTimeString().slice(0, 5); // Extract time part
+			// 			return time;
+			// 		}
+			// 		return null;
+			// 	},
+			// 	validate: {
+			// 		isValidTime(value) {
+			// 			if (this.mot && !/^\d{2}:\d{2}$/.test(value)) {
+			// 				throw new Error("Invalid time format. Expected format: HH:mm");
+			// 			}
+			// 		},
+			// 	},
+			// },
+
 			complete: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
@@ -82,7 +97,6 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
-
 			arrived: {
 				type: DataTypes.DATE,
 				allowNull: true,
@@ -94,7 +108,6 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
-
 			vehicleId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
@@ -111,6 +124,46 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: "Booking",
+			validate: {
+				atLeastOneTrue() {
+					if (!(this.mot || this.repair || this.diagnostic)) {
+						throw new Error(
+							"At least one of mot, repair, or diagnostic must be true."
+						);
+					}
+				},
+				validateBookingAvailability() {
+					const { Booking } = sequelize.models; // Reference to the Booking model
+
+					const repairDiagnosticBookingsCount = Booking.count({
+						where: {
+							date: this.date,
+							[Op.or]: [{ repair: true }, { diagnostic: true }],
+						},
+					});
+
+					return repairDiagnosticBookingsCount.then((count) => {
+						if (this.vehicle.type === "car") {
+							if (count >= 3) {
+								throw new Error(
+									"No more than 3 cars can be booked on a single day for repair and diagnostic."
+								);
+							}
+						} else if (this.vehicle.type === "bike") {
+							if (count >= 2) {
+								throw new Error(
+									"No more than 2 bikes can be booked on a single day for repair and diagnostic."
+								);
+							}
+						}
+						if (count >= 5) {
+							throw new Error(
+								"No more than 5 vehicles in total can be booked on a single day for repair and diagnostic."
+							);
+						}
+					});
+				},
+			},
 		}
 	);
 

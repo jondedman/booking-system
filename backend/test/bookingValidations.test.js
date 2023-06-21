@@ -11,18 +11,42 @@ describe("Booking Model", () => {
 		// Close the database connection after all tests
 		await sequelize.close();
 	});
+	// find random user, customer and vehicle
+	async function findDetails() {
+		const user = await User.findOne({
+			order: sequelize.literal("random()"),
+		});
+		const customer = await Customer.findOne({
+			order: sequelize.literal("random()"),
+		});
+		const vehicle = await Vehicle.findOne({
+			order: sequelize.literal("random()"),
+		});
+		return { user, customer, vehicle };
+	}
+
+	// async function createBooking() { // function to create a complete booking - not for missing fields
+	// 	const { user, customer, vehicle } = await findDetails();
+	// 	const booking = await Booking.create({
+	// 		mot: true,
+	// 		repair: false,
+	// 		diagnostic: false,
+	// 		date: new Date("2025-01-01"),
+	// 		time: "10:00:00",
+	// 		complete: false,
+	// 		vehicleId: vehicle.id,
+	// 		customerId: customer.id,
+	// 		userId: user.id,
+	// 		parts: 200,
+	// 		labor: 250,
+	// 		quote: 450,
+	// 		notes: "test notes",
+	// 	});
 
 	describe("Validations", () => {
+		// date validations
 		test("should not allow booking without a date", async () => {
-			const user = await User.findOne({
-				order: sequelize.literal("random()"),
-			});
-			const customer = await Customer.findOne({
-				order: sequelize.literal("random()"),
-			});
-			const vehicle = await Vehicle.findOne({
-				order: sequelize.literal("random()"),
-			});
+			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
 					mot: true,
@@ -33,14 +57,19 @@ describe("Booking Model", () => {
 					vehicleId: vehicle.id,
 					customerId: customer.id,
 					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
 				});
+				throw new Error("Expected validation error for missing date");
 			} catch (error) {
-				expect(error.message).toContain("date cannot be null");
+				expect(error.errors[0].message).toBe("Booking.date cannot be null");
 			}
 		});
 
 		test("should not allow booking with a date in the past", async () => {
-			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
 					mot: true,
@@ -49,59 +78,174 @@ describe("Booking Model", () => {
 					date: new Date("2020-01-01"),
 					time: "10:00:00",
 					complete: false,
-					vehicleId: 1,
-					customerId: 1,
-					userId: 1,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
 				});
+				throw new Error("Expected validation error for past date");
 			} catch (error) {
-				expect(error.message).toContain(
-					"Validation error: Booking date must be in the future."
+				expect(error.errors[0].message).toBe(
+					"Booking date must be in the future."
 				);
 			}
 		});
 
-		test("should not require time if mot is not selected", async () => {
-			// expect.assertions(1);
+		test("date should not be empty", async () => {
+			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
 					mot: false,
 					repair: true,
 					diagnostic: false,
-					date: new Date("2025-01-01"),
+					date: "",
+					time: "10:00:00",
 					complete: false,
-					vehicleId: 1,
-					customerId: 1,
-					userId: 1,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
 				});
-				const bookingCount = await Booking.count();
-				expect(bookingCount).toBe(1);
+				throw new Error("Expected validation error for empty date");
 			} catch (error) {
-				// Should not throw an error
+				expect(error.message).toContain("Validation notEmpty on date failed");
 			}
 		});
 
-		test("should require time if mot is selected", async () => {
-			expect.assertions(1);
+		test("date should be a valid format", async () => {
+			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
-					mot: true,
+					mot: false,
 					repair: true,
-					diagnostic: false,
-					date: new Date("2025-01-01"),
+					diagnostic: true,
+					date: "2022-30-02", // Invalid date format
+					time: "10:00:00",
 					complete: false,
-					vehicleId: 1,
-					customerId: 1,
-					userId: 1,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
 				});
+				throw new Error("Expected validation error for invalid date format");
 			} catch (error) {
-				expect(error.message).toContain(
-					'insert or update on table "Bookings" violates foreign key constraint "Bookings_userId_fkey"'
+				expect(error.errors[0].message).toBe(
+					"Validation isDate on date failed"
 				);
 			}
 		});
 
+		// time validations
+		// test("should not require time if mot is not selected", async () => {
+		// 	// expect.assertions(1);
+		// 	const { user, customer, vehicle } = await findDetails();
+		// 	try {
+		// 		await Booking.create({
+		// 			mot: false,
+		// 			repair: true,
+		// 			diagnostic: false,
+		// 			date: new Date("2025-01-01"),
+		// 			complete: false,
+		// 			vehicleId: vehicle.id,
+		// 			customerId: customer.id,
+		// 			userId: user.id,
+		// 			parts: 200,
+		// 			labor: 250,
+		// 			quote: 450,
+		// 			notes: "test notes",
+		// 		});
+		// 		const bookingCount = await Booking.count();
+		// 		expect(bookingCount).toBe(1);
+		// 	} catch (error) {
+		// 		// Should not throw an error
+		// 	}
+		// });
+
+		// test("should require time if mot is selected", async () => {
+		// 	expect.assertions(1);
+		// 	const { user, customer, vehicle } = await findDetails();
+		// 	console.log("user", user);
+		// 	console.log("user.id", user.id);
+		// 	try {
+		// 		await Booking.create({
+		// 			mot: true,
+		// 			repair: false,
+		// 			diagnostic: false,
+		// 			date: new Date("2025-01-01"),
+		// 			complete: false,
+		// 			vehicleId: vehicle.id,
+		// 			customerId: customer.id,
+		// 			userId: user.id,
+		// 			parts: 200,
+		// 			labor: 250,
+		// 			quote: 450,
+		// 			notes: "test notes",
+		// 		});
+		// 	} catch (error) {
+		// 		expect(error.message).toContain(
+		// 			'insert or update on table "Bookings" violates foreign key constraint "Bookings_userId_fkey"'
+		// 		);
+		// 	}
+		// });
+
+		// test("when time is required, it should not be an empty string", async () => {
+		// 	// expect.assertions(1);
+		// 	const { user, customer, vehicle } = await findDetails();
+		// 	try {
+		// 		await Booking.create({
+		// 			mot: true,
+		// 			repair: true,
+		// 			diagnostic: false,
+		// 			time: "",
+		// 			complete: false,
+		// 			vehicleId: vehicle.id,
+		// 			customerId: customer.id,
+		// 			userId: user.id,
+		// 			parts: 200,
+		// 			labor: 250,
+		// 			quote: 450,
+		// 			notes: "test notes",
+		// 		});
+		// 	} catch (error) {
+		// 		expect(error.message).toContain("time cannot be empty");
+		// 	}
+		// });
+
+		// test("when time is required, it should be a time format", async () => {
+		// 	// expect.assertions(1);
+		// 	const { user, customer, vehicle } = await findDetails();
+		// 	try {
+		// 		await Booking.create({
+		// 			mot: true,
+		// 			repair: true,
+		// 			diagnostic: false,
+		// 			time: "not a time format",
+		// 			complete: false,
+		// 			vehicleId: vehicle.id,
+		// 			customerId: customer.id,
+		// 			userId: user.id,
+		// 			parts: 200,
+		// 			labor: 250,
+		// 			quote: 450,
+		// 			notes: "test notes",
+		// 		});
+		// 	} catch (error) {
+		// 		expect(error.message).toContain("time must be a valid time format");
+		// 	}
+		// });
+		// complete validations
 		test("should not allow complete to be true for future bookings", async () => {
 			expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
 			const currentDate = new Date();
 			const futureDate = new Date(currentDate.getFullYear() + 1, 0, 1); // Future date
 			try {
@@ -112,9 +256,13 @@ describe("Booking Model", () => {
 					date: futureDate,
 					time: "10:00:00",
 					complete: true,
-					vehicleId: 1,
-					customerId: 1,
-					userId: 1,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
 				});
 			} catch (error) {
 				expect(error.message).toContain(
@@ -122,6 +270,148 @@ describe("Booking Model", () => {
 				);
 			}
 		});
+	});
+
+	test("complete is required", async () => {
+		// expect.assertions(1);
+		const { user, customer, vehicle } = await findDetails();
+		try {
+			await Booking.create({
+				mot: true,
+				repair: false,
+				diagnostic: false,
+				date: futureDate,
+				time: "10:00:00",
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.message).toContain("complete cannot be null");
+		}
+	});
+
+	test("complete should be boolean", async () => {
+		// expect.assertions(1);
+		const { user, customer, vehicle } = await findDetails();
+		try {
+			await Booking.create({
+				mot: true,
+				repair: false,
+				diagnostic: false,
+				date: futureDate,
+				time: "10:00:00",
+				complete: "not a boolean",
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.message).toContain("complete must be a boolean value.");
+		}
+	});
+	//mot, repair, diagnostic validations
+	test("should require at least one of mot, repair, or diagnostic", async () => {
+		// expect.assertions(1);
+		const { user, customer, vehicle } = await findDetails();
+		try {
+			await Booking.create({
+				date: new Date("2025-01-01"),
+				time: "10:00:00",
+				complete: false,
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.message).toContain(
+				"At least one of mot, repair, or diagnostic must be selected."
+			);
+		}
+	});
+
+	test("mot should be boolean", async () => {
+		// expect.assertions(1);
+		const { user, customer, vehicle } = await findDetails();
+		try {
+			await Booking.create({
+				repair: false,
+				mot: "not a boolean",
+				diagnostic: true,
+				date: new Date("2025-01-01"),
+				time: "10:00:00",
+				complete: false,
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.message).toContain("mot must be a boolean value.");
+		}
+	});
+
+	test("repair should be boolean", async () => {
+		// expect.assertions(1);
+		const { user, customer, vehicle } = await findDetails();
+		try {
+			await Booking.create({
+				mot: false,
+				repair: "not a boolean",
+				diagnostic: true,
+				date: new Date("2025-01-01"),
+				time: "10:00:00",
+				complete: false,
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.message).toContain("repair must be a boolean value.");
+		}
+	});
+
+	test("diagnostic should be boolean", async () => {
+		// expect.assertions(1);
+		const { user, customer, vehicle } = await findDetails();
+		try {
+			await Booking.create({
+				mot: false,
+				repair: true,
+				diagnostic: "not a boolean",
+				date: new Date("2025-01-01"),
+				time: "10:00:00",
+				complete: false,
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
+		} catch (error) {
+			expect(error.message).toContain("diagnostic must be a boolean value.");
+		}
 	});
 
 	describe("Associations", () => {
@@ -146,6 +436,10 @@ describe("Booking Model", () => {
 				vehicleId: vehicle.id,
 				customerId: customer.id,
 				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
 			});
 
 			const foundBooking = await Booking.findByPk(booking.id, {
@@ -180,6 +474,10 @@ describe("Booking Model", () => {
 					vehicleId: vehicle.id,
 					customerId: customer.id,
 					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
 				},
 				{ include: [{ model: Vehicle }] }
 			);
@@ -213,6 +511,10 @@ describe("Booking Model", () => {
 				vehicleId: vehicle.id,
 				customerId: customer.id,
 				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
 			});
 
 			const foundBooking = await Booking.findByPk(booking.id, {
