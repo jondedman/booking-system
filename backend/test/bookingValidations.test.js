@@ -28,20 +28,6 @@ describe("Booking Model", () => {
 
 	describe("Validations", () => {
 		// date validations
-		// find random user, customer, and vehicle
-		// 	async function findDetails() {
-		// 		const user = await User.findOne({
-		// 			order: sequelize.literal("random()"),
-		// 		});
-		// 		const customer = await Customer.findOne({
-		// 			order: sequelize.literal("random()"),
-		// 		});
-		// 		const vehicle = await Vehicle.findOne({
-		// 			order: sequelize.literal("random()"),
-		// 		});
-		// 		return { user, customer, vehicle };
-		// 	}
-		// });
 
 		test("should not allow booking without a date", async () => {
 			const { user, customer, vehicle } = await findDetails();
@@ -171,263 +157,320 @@ describe("Booking Model", () => {
 				);
 			}
 		});
+
+		test("complete is required", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: true,
+					repair: false,
+					diagnostic: false,
+					date: new Date("2025-01-01"),
+					// time: "10:00:00",
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain("complete cannot be null");
+			}
+		});
+
+		test("complete should be boolean", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: true,
+					repair: false,
+					diagnostic: false,
+					date: new Date("2025-01-01"),
+					// time: "10:00:00",
+					complete: "not a boolean",
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					'invalid input syntax for type boolean: "not a boolean"'
+				);
+			}
+		});
+
+		//mot, repair, diagnostic validations
+		test("should require diagnostic", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					date: new Date("2025-01-01"),
+					mot: true,
+					repair: false,
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					"notNull Violation: Booking.diagnostic cannot be null"
+				);
+			}
+		});
+
+		test("should require mot", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					date: new Date("2025-01-01"),
+					repair: true,
+					diagnostic: true,
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					"notNull Violation: Booking.mot cannot be null"
+				);
+			}
+		});
+
+		test("should require repair", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					date: new Date("2025-01-01"),
+					mot: true,
+					diagnostic: true,
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					"notNull Violation: Booking.repair cannot be null"
+				);
+			}
+		});
+
+		test("mot should be boolean", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					repair: false,
+					mot: "not a boolean",
+					diagnostic: true,
+					date: new Date("2025-01-01"),
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					'invalid input syntax for type boolean: "not a boolean"'
+				);
+			}
+		});
+
+		test("repair should be boolean", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: false,
+					repair: "not a boolean",
+					diagnostic: true,
+					date: new Date("2025-01-01"),
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					'invalid input syntax for type boolean: "not a boolean"'
+				);
+			}
+		});
+
+		test("diagnostic should be boolean", async () => {
+			// expect.assertions(1);
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: false,
+					repair: true,
+					diagnostic: "not a boolean",
+					date: new Date("2025-01-01"),
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					'invalid input syntax for type boolean: "not a boolean"'
+				);
+			}
+		});
 	});
 
-	// 	// test("complete is required", async () => {
-	// 	// 	// expect.assertions(1);
-	// 	// 	const { user, customer, vehicle } = await findDetails();
-	// 	// 	try {
-	// 	// 		await Booking.create({
-	// 	// 			mot: true,
-	// 	// 			repair: false,
-	// 	// 			diagnostic: false,
-	// 	// 			date: new Date("2025-01-01"),
-	// 	// 			// time: "10:00:00",
-	// 	// 			vehicleId: vehicle.id,
-	// 	// 			customerId: customer.id,
-	// 	// 			userId: user.id,
-	// 	// 			parts: 200,
-	// 	// 			labor: 250,
-	// 	// 			quote: 450,
-	// 	// 			notes: "test notes",
-	// 	// 		});
-	// 	// 	} catch (error) {
-	// 	// 		expect(error.message).toContain("complete cannot be null");
-	// 	// 	}
-	// 	// });
+	describe("Associations", () => {
+		test("should belong to a user", async () => {
+			const user = await User.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const customer = await Customer.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const vehicle = await Vehicle.findOne({
+				order: sequelize.literal("random()"),
+			});
 
-	// 	// test("complete should be boolean", async () => {
-	// 	// 	// expect.assertions(1);
-	// 	// 	const { user, customer, vehicle } = await findDetails();
-	// 	// 	try {
-	// 	// 		await Booking.create({
-	// 	// 			mot: true,
-	// 	// 			repair: false,
-	// 	// 			diagnostic: false,
-	// 	// 			date: futureDate,
-	// 	// 			// time: "10:00:00",
-	// 	// 			complete: "not a boolean",
-	// 	// 			vehicleId: vehicle.id,
-	// 	// 			customerId: customer.id,
-	// 	// 			userId: user.id,
-	// 	// 			parts: 200,
-	// 	// 			labor: 250,
-	// 	// 			quote: 450,
-	// 	// 			notes: "test notes",
-	// 	// 		});
-	// 	// 	} catch (error) {
-	// 	// 		expect(error.message).toContain("complete must be a boolean value.");
-	// 	// 	}
-	// 	// });
-	// 	// //mot, repair, diagnostic validations
-	// 	// test("should require at least one of mot, repair, or diagnostic", async () => {
-	// 	// 	// expect.assertions(1);
-	// 	// 	const { user, customer, vehicle } = await findDetails();
-	// 	// 	try {
-	// 	// 		await Booking.create({
-	// 	// 			date: new Date("2025-01-01"),
-	// 	// 			// time: "10:00:00",
-	// 	// 			complete: false,
-	// 	// 			vehicleId: vehicle.id,
-	// 	// 			customerId: customer.id,
-	// 	// 			userId: user.id,
-	// 	// 			parts: 200,
-	// 	// 			labor: 250,
-	// 	// 			quote: 450,
-	// 	// 			notes: "test notes",
-	// 	// 		});
-	// 	// 	} catch (error) {
-	// 	// 		expect(error.message).toContain(
-	// 	// 			"At least one of mot, repair, or diagnostic must be selected."
-	// 	// 		);
-	// 	// 	}
-	// 	// });
+			const booking = await Booking.create({
+				mot: true,
+				repair: true,
+				diagnostic: false,
+				date: new Date("2025-01-01"),
+				// time: "10:00:00",
+				complete: false,
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
 
-	// 	// test("mot should be boolean", async () => {
-	// 	// 	// expect.assertions(1);
-	// 	// 	const { user, customer, vehicle } = await findDetails();
-	// 	// 	try {
-	// 	// 		await Booking.create({
-	// 	// 			repair: false,
-	// 	// 			mot: "not a boolean",
-	// 	// 			diagnostic: true,
-	// 	// 			date: new Date("2025-01-01"),
-	// 	// 			// time: "10:00:00",
-	// 	// 			complete: false,
-	// 	// 			vehicleId: vehicle.id,
-	// 	// 			customerId: customer.id,
-	// 	// 			userId: user.id,
-	// 	// 			parts: 200,
-	// 	// 			labor: 250,
-	// 	// 			quote: 450,
-	// 	// 			notes: "test notes",
-	// 	// 		});
-	// 	// 	} catch (error) {
-	// 	// 		expect(error.message).toContain("mot must be a boolean value.");
-	// 	// 	}
-	// 	// });
+			const foundBooking = await Booking.findByPk(booking.id, {
+				include: [{ model: User }],
+			});
 
-	// 	// test("repair should be boolean", async () => {
-	// 	// 	// expect.assertions(1);
-	// 	// 	const { user, customer, vehicle } = await findDetails();
-	// 	// 	try {
-	// 	// 		await Booking.create({
-	// 	// 			mot: false,
-	// 	// 			repair: "not a boolean",
-	// 	// 			diagnostic: true,
-	// 	// 			date: new Date("2025-01-01"),
-	// 	// 			// time: "10:00:00",
-	// 	// 			complete: false,
-	// 	// 			vehicleId: vehicle.id,
-	// 	// 			customerId: customer.id,
-	// 	// 			userId: user.id,
-	// 	// 			parts: 200,
-	// 	// 			labor: 250,
-	// 	// 			quote: 450,
-	// 	// 			notes: "test notes",
-	// 	// 		});
-	// 	// 	} catch (error) {
-	// 	// 		expect(error.message).toContain("repair must be a boolean value.");
-	// 	// 	}
-	// 	// });
+			expect(foundBooking.User.firstName).toBe(user.firstName);
+			expect(foundBooking.User.lastName).toBe(user.lastName);
+			expect(foundBooking.User.email).toBe(user.email);
+		});
 
-	// 	// test("diagnostic should be boolean", async () => {
-	// 	// 	// expect.assertions(1);
-	// 	// 	const { user, customer, vehicle } = await findDetails();
-	// 	// 	try {
-	// 	// 		await Booking.create({
-	// 	// 			mot: false,
-	// 	// 			repair: true,
-	// 	// 			diagnostic: "not a boolean",
-	// 	// 			date: new Date("2025-01-01"),
-	// 	// 			// time: "10:00:00",
-	// 	// 			complete: false,
-	// 	// 			vehicleId: vehicle.id,
-	// 	// 			customerId: customer.id,
-	// 	// 			userId: user.id,
-	// 	// 			parts: 200,
-	// 	// 			labor: 250,
-	// 	// 			quote: 450,
-	// 	// 			notes: "test notes",
-	// 	// 		});
-	// 	// 	} catch (error) {
-	// 	// 		expect(error.message).toContain("diagnostic must be a boolean value.");
-	// 	// 	}
-	// 	// });
+		test("should belong to a vehicle", async () => {
+			// abstract out the random selection of a user, customer and vehicle to a function
+			const user = await User.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const customer = await Customer.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const vehicle = await Vehicle.findOne({
+				order: sequelize.literal("random()"),
+			});
 
-	// 	describe("Associations", () => {
-	// 		test("should belong to a user", async () => {
-	// 			const user = await User.findOne({
-	// 				order: sequelize.literal("random()"),
-	// 			});
-	// 			const customer = await Customer.findOne({
-	// 				order: sequelize.literal("random()"),
-	// 			});
-	// 			const vehicle = await Vehicle.findOne({
-	// 				order: sequelize.literal("random()"),
-	// 			});
+			const booking = await Booking.create(
+				{
+					mot: false,
+					repair: true,
+					diagnostic: false,
+					date: new Date("2025-01-01"),
+					// time: "10:00:00",
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				},
+				{ include: [{ model: Vehicle }] }
+			);
+			const foundBooking = await Booking.findByPk(booking.id, {
+				include: [{ model: Vehicle }],
+			});
+			expect(foundBooking.Vehicle.make).toBe(vehicle.make);
+			expect(foundBooking.Vehicle.registration).toBe(vehicle.registration);
+			expect(foundBooking.Vehicle.lastMot).toBeInstanceOf(Date);
+			expect(foundBooking.Vehicle.colour).toBe(vehicle.colour);
+		});
 
-	// 			const booking = await Booking.create({
-	// 				mot: true,
-	// 				repair: true,
-	// 				diagnostic: false,
-	// 				date: new Date("2025-01-01"),
-	// 				// time: "10:00:00",
-	// 				complete: false,
-	// 				vehicleId: vehicle.id,
-	// 				customerId: customer.id,
-	// 				userId: user.id,
-	// 				parts: 200,
-	// 				labor: 250,
-	// 				quote: 450,
-	// 				notes: "test notes",
-	// 			});
+		test("should belong to a customer", async () => {
+			const user = await User.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const customer = await Customer.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const vehicle = await Vehicle.findOne({
+				order: sequelize.literal("random()"),
+			});
 
-	// 			const foundBooking = await Booking.findByPk(booking.id, {
-	// 				include: [{ model: User }],
-	// 			});
+			const booking = await Booking.create({
+				mot: true,
+				repair: false,
+				diagnostic: false,
+				date: new Date("2025-01-01"),
+				// time: "10:00:00",
+				complete: false,
+				vehicleId: vehicle.id,
+				customerId: customer.id,
+				userId: user.id,
+				parts: 200,
+				labor: 250,
+				quote: 450,
+				notes: "test notes",
+			});
 
-	// 			expect(foundBooking.User.firstName).toBe(user.firstName);
-	// 			expect(foundBooking.User.lastName).toBe(user.lastName);
-	// 			expect(foundBooking.User.email).toBe(user.email);
-	// 		});
+			const foundBooking = await Booking.findByPk(booking.id, {
+				include: [{ model: Customer }],
+			});
 
-	// 		test("should belong to a vehicle", async () => {
-	// 			// abstract out the random selection of a user, customer and vehicle to a function
-	// 			const user = await User.findOne({
-	// 				order: sequelize.literal("random()"),
-	// 			});
-	// 			const customer = await Customer.findOne({
-	// 				order: sequelize.literal("random()"),
-	// 			});
-	// 			const vehicle = await Vehicle.findOne({
-	// 				order: sequelize.literal("random()"),
-	// 			});
-
-	// 			const booking = await Booking.create(
-	// 				{
-	// 					mot: false,
-	// 					repair: true,
-	// 					diagnostic: false,
-	// 					date: new Date("2025-01-01"),
-	// 					// time: "10:00:00",
-	// 					complete: false,
-	// 					vehicleId: vehicle.id,
-	// 					customerId: customer.id,
-	// 					userId: user.id,
-	// 					parts: 200,
-	// 					labor: 250,
-	// 					quote: 450,
-	// 					notes: "test notes",
-	// 				},
-	// 				{ include: [{ model: Vehicle }] }
-	// 			);
-	// 			const foundBooking = await Booking.findByPk(booking.id, {
-	// 				include: [{ model: Vehicle }],
-	// 			});
-	// 			expect(foundBooking.Vehicle.make).toBe(vehicle.make);
-	// 			expect(foundBooking.Vehicle.registration).toBe(vehicle.registration);
-	// 			expect(foundBooking.Vehicle.lastMot).toBeInstanceOf(Date);
-	// 			expect(foundBooking.Vehicle.colour).toBe(vehicle.colour);
-	// 		});
-
-	// 		// test("should belong to a customer", async () => {
-	// 		// 	const user = await User.findOne({
-	// 		// 		order: sequelize.literal("random()"),
-	// 		// 	});
-	// 		// 	const customer = await Customer.findOne({
-	// 		// 		order: sequelize.literal("random()"),
-	// 		// 	});
-	// 		// 	const vehicle = await Vehicle.findOne({
-	// 		// 		order: sequelize.literal("random()"),
-	// 		// 	});
-
-	// 		// 	const booking = await Booking.create({
-	// 		// 		mot: true,
-	// 		// 		repair: false,
-	// 		// 		diagnostic: false,
-	// 		// 		date: new Date("2025-01-01"),
-	// 		// 		// time: "10:00:00",
-	// 		// 		complete: false,
-	// 		// 		vehicleId: vehicle.id,
-	// 		// 		customerId: customer.id,
-	// 		// 		userId: user.id,
-	// 		// 		parts: 200,
-	// 		// 		labor: 250,
-	// 		// 		quote: 450,
-	// 		// 		notes: "test notes",
-	// 		// 	});
-
-	// 			const foundBooking = await Booking.findByPk(booking.id, {
-	// 				include: [{ model: Customer }],
-	// 			});
-
-	// 			expect(foundBooking.Customer.firstName).toBe(customer.firstName);
-	// 			expect(foundBooking.Customer.lastName).toBe(customer.lastName);
-	// 			expect(foundBooking.Customer.email).toBe(customer.email);
-	// 			expect(foundBooking.Customer.mobileNumber).toBe(customer.mobileNumber);
-	// 			expect(foundBooking.Customer.address).toBe(customer.address);
-	// 		});
-	// 	});
-	// });
+			expect(foundBooking.Customer.firstName).toBe(customer.firstName);
+			expect(foundBooking.Customer.lastName).toBe(customer.lastName);
+			expect(foundBooking.Customer.email).toBe(customer.email);
+			expect(foundBooking.Customer.mobileNumber).toBe(customer.mobileNumber);
+			expect(foundBooking.Customer.address).toBe(customer.address);
+		});
+	});
 });
