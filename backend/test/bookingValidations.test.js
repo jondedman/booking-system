@@ -128,8 +128,6 @@ describe("Booking Model", () => {
 			}
 		});
 
-		// });
-
 		// complete validations
 		test("should not allow complete to be true for future bookings", async () => {
 			// expect.assertions(1);
@@ -376,7 +374,6 @@ describe("Booking Model", () => {
 				repair: true,
 				diagnostic: false,
 				date: new Date("2025-01-01"),
-				// time: "10:00:00",
 				complete: false,
 				vehicleId: vehicle.id,
 				customerId: customer.id,
@@ -471,6 +468,41 @@ describe("Booking Model", () => {
 			expect(foundBooking.Customer.email).toBe(customer.email);
 			expect(foundBooking.Customer.mobileNumber).toBe(customer.mobileNumber);
 			expect(foundBooking.Customer.address).toBe(customer.address);
+		});
+	});
+
+	describe("model level validations", () => {
+		test("At least one of mot, repair, diagnostic must be true", async () => {
+			const user = await User.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const customer = await Customer.findOne({
+				order: sequelize.literal("random()"),
+			});
+			const vehicle = await Vehicle.findOne({
+				order: sequelize.literal("random()"),
+			});
+
+			try {
+				await Booking.create({
+					mot: false,
+					repair: false,
+					diagnostic: false,
+					date: new Date("2025-01-01"),
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+			} catch (error) {
+				expect(error.message).toContain(
+					"Validation error: At least one of mot, repair, or diagnostic must be true."
+				);
+			}
 		});
 	});
 });
