@@ -111,53 +111,53 @@ module.exports = (sequelize, DataTypes) => {
 						);
 					}
 				},
-				validateBookingAvailability() {
-					const { Booking, Vehicle } = sequelize.models;
+				// validateBookingAvailability() {
+				// 	const { Booking, Vehicle } = sequelize.models;
 
-					return new Promise((resolve, reject) => {
-						Booking.count({
-							where: {
-								date: this.date,
-								[Op.or]: [{ repair: true }, { diagnostic: true }],
-							},
-						})
-							.then((count) => {
-								return Vehicle.findByPk(this.vehicleId); // Fetch the associated vehicle object
-							})
-							.then((vehicle) => {
-								if (vehicle.type === "car") {
-									if (count >= 3) {
-										reject(
-											new Error(
-												"No more than 3 cars can be booked on a single day for repair and diagnostic."
-											)
-										);
-									}
-								} else if (vehicle.type === "bike") {
-									if (count >= 2) {
-										reject(
-											new Error(
-												"No more than 2 bikes can be booked on a single day for repair and diagnostic."
-											)
-										);
-									}
-								}
+				// 	return new Promise((resolve, reject) => {
+				// 		Booking.count({
+				// 			where: {
+				// 				date: this.date,
+				// 				[Op.or]: [{ repair: true }, { diagnostic: true }],
+				// 			},
+				// 		})
+				// 			.then((count) => {
+				// 				return Vehicle.findByPk(this.vehicleId); // Fetch the associated vehicle object
+				// 			})
+				// 			.then((vehicle) => {
+				// 				if (vehicle.type === "car") {
+				// 					if (count >= 3) {
+				// 						reject(
+				// 							new Error(
+				// 								"No more than 3 cars can be booked on a single day for repair and diagnostic."
+				// 							)
+				// 						);
+				// 					}
+				// 				} else if (vehicle.type === "bike") {
+				// 					if (count >= 2) {
+				// 						reject(
+				// 							new Error(
+				// 								"No more than 2 bikes can be booked on a single day for repair and diagnostic."
+				// 							)
+				// 						);
+				// 					}
+				// 				}
 
-								if (count >= 5) {
-									reject(
-										new Error(
-											"No more than 5 vehicles in total can be booked on a single day for repair and diagnostic."
-										)
-									);
-								}
+				// 				if (count >= 5) {
+				// 					reject(
+				// 						new Error(
+				// 							"No more than 5 vehicles in total can be booked on a single day for repair and diagnostic."
+				// 						)
+				// 					);
+				// 				}
 
-								resolve();
-							})
-							.catch((error) => {
-								reject(error);
-							});
-					});
-				},
+				// 				resolve();
+				// 			})
+				// 			.catch((error) => {
+				// 				reject(error);
+				// 			});
+				// 	});
+				// },
 			},
 		}
 	);
