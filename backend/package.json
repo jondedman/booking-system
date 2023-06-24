@@ -1,5 +1,5 @@
 {
-	"name": "booking-system",
+	"name": "booking-backend",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
@@ -25,5 +25,9 @@
 	},
 	"devDependencies": {
 		"jest": "^29.5.0"
-	}
+	},
+	"description": "backend of project",
+	"main": "index.js",
+	"author": "jon dedman",
+	"license": "MIT"
 }
