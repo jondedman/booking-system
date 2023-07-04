@@ -19,10 +19,10 @@
 		"sequelize-cli": "^6.6.0"
 	},
 	"scripts": {
-		"start": "nodemon index.js",
+		"start": "nodemon server.js",
 		"build": "echo 'No build script specified'",
 		"test": "jest --detectOpenHandles",
-		"backend": "node backend/index.js"
+		"backend": "node backend/server.js"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -34,7 +34,7 @@
 		"nodemon": "^2.0.22"
 	},
 	"description": "backend of project",
-	"main": "index.js",
+	"main": "server.js",
 	"author": "jon dedman",
 	"license": "MIT"
 }
