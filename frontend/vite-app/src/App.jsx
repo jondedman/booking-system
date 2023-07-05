@@ -43,6 +43,7 @@ import Axios from "axios";
 function App() {
 	const [registerUsername, setRegisterUsername] = useState("");
 	const [registerPassword, setRegisterPassword] = useState("");
+	const [registerEmail, setRegisterEmail] = useState("");
 	const [loginUsername, setLoginUsername] = useState("");
 	const [loginPassword, setLoginPassword] = useState("");
 	const [data, setData] = useState(null);
@@ -52,6 +53,7 @@ function App() {
 			data: {
 				username: registerUsername,
 				password: registerPassword,
+				email: registerEmail,
 			},
 			withCredentials: true,
 			url: "http://localhost:5173/register",
@@ -89,6 +91,10 @@ function App() {
 				<input
 					placeholder="password"
 					onChange={(e) => setRegisterPassword(e.target.value)}
+				/>
+				<input
+					placeholder="email"
+					onChange={(e) => setRegisterEmail(e.target.value)}
 				/>
 				<button onClick={register}>Submit</button>
 			</div>

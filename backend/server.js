@@ -159,10 +159,15 @@ app.post("/register", async (req, res) => {
 			password: hashedPassword,
 		});
 
+		// 	res.send("User Created");
+		// } catch (error) {
+		// 	console.error(error);
+		// 	res.send("Error occurred during user registration");
+		// }
 		res.send("User Created");
 	} catch (error) {
 		console.error(error);
-		res.send("Error occurred during user registration");
+		res.status(500).send(error.message); // Send the error message as the response
 	}
 });
 
