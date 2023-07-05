@@ -152,6 +152,6 @@ app.get("/user", (req, res) => {
 //----------------------------------------- END OF ROUTES---------------------------------------------------
 
 // Start Server
-app.listen(4000, () => {
+app.listen(5173, () => {
 	console.log("Server Has Started");
 });
