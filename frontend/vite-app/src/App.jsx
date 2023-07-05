@@ -1,36 +1,117 @@
+// import { useState } from "react";
+// import reactLogo from "./assets/react.svg";
+// import viteLogo from "/vite.svg";
+// import "./App.css";
+// import Quotes from "./Quotes";
+
+// function App() {
+// 	const [count, setCount] = useState(0);
+
+// 	return (
+// 		<>
+// 			<div>
+// 				<a href="https://vitejs.dev" target="_blank">
+// 					<img src={viteLogo} className="logo" alt="Vite logo" />
+// 				</a>
+// 				<a href="https://react.dev" target="_blank">
+// 					<img src={reactLogo} className="logo react" alt="React logo" />
+// 				</a>
+// 			</div>
+// 			<h1>RD Autos Booking System</h1>
+// 			<div className="card">
+// 				<button onClick={() => setCount((count) => count + 1)}>
+// 					count is {count}
+// 				</button>
+// 				<p>
+// 					Edit <code>src/App.jsx</code> and save to test HMR
+// 				</p>
+// 				<Quotes />
+// 			</div>
+// 			<p className="read-the-docs">
+// 				Click on the Vite and React logos to learn more
+// 			</p>
+// 		</>
+// 	);
+// }
+
+// export default App;
+// changed this line from import React, { useState } from "react";
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import Quotes from "./Quotes";
+import Axios from "axios";
 
 function App() {
-	const [count, setCount] = useState(0);
-
+	const [registerUsername, setRegisterUsername] = useState("");
+	const [registerPassword, setRegisterPassword] = useState("");
+	const [loginUsername, setLoginUsername] = useState("");
+	const [loginPassword, setLoginPassword] = useState("");
+	const [data, setData] = useState(null);
+	const register = () => {
+		Axios({
+			method: "POST",
+			data: {
+				username: registerUsername,
+				password: registerPassword,
+			},
+			withCredentials: true,
+			url: "http://localhost:4000/register",
+		}).then((res) => console.log(res));
+	};
+	const login = () => {
+		Axios({
+			method: "POST",
+			data: {
+				username: loginUsername,
+				password: loginPassword,
+			},
+			withCredentials: true,
+			url: "http://localhost:4000/login",
+		}).then((res) => console.log(res));
+	};
+	const getUser = () => {
+		Axios({
+			method: "GET",
+			withCredentials: true,
+			url: "http://localhost:4000/user",
+		}).then((res) => {
+			setData(res.data);
+			console.log(res.data);
+		});
+	};
 	return (
-		<>
+		<div className="App">
 			<div>
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+				<h1>Register</h1>
+				<input
+					placeholder="username"
+					onChange={(e) => setRegisterUsername(e.target.value)}
+				/>
+				<input
+					placeholder="password"
+					onChange={(e) => setRegisterPassword(e.target.value)}
+				/>
+				<button onClick={register}>Submit</button>
 			</div>
-			<h1>RD Autos Booking System</h1>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.jsx</code> and save to test HMR
-				</p>
-				<Quotes />
+
+			<div>
+				<h1>Login</h1>
+				<input
+					placeholder="username"
+					onChange={(e) => setLoginUsername(e.target.value)}
+				/>
+				<input
+					placeholder="password"
+					onChange={(e) => setLoginPassword(e.target.value)}
+				/>
+				<button onClick={login}>Submit</button>
 			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
-		</>
+
+			<div>
+				<h1>Get User</h1>
+				<button onClick={getUser}>Submit</button>
+				{data ? <h1>Welcome Back {data.username}</h1> : null}
+			</div>
+		</div>
 	);
 }
 
