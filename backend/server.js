@@ -64,10 +64,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
 	cors({
-		origin: "http://127.0.0.1:5174", // <-- location of the React app you're connecting to
+		origin: "http://localhost:5174",
 		credentials: true,
 	})
 );
+
 app.use(
 	session({
 		secret: "secretcode",
@@ -104,10 +105,12 @@ passport.use(
 
 passport.serializeUser(function (user, done) {
 	console.log("serializeUser is called");
+	console.log(user);
 	done(null, user.id);
 });
 
 passport.deserializeUser(async function (id, done) {
+	console.log("deserializeUser is called");
 	try {
 		const user = await User.findByPk(id);
 		done(null, user);
@@ -131,6 +134,8 @@ app.post("/login", (req, res, next) => {
 			if (err) {
 				return next(err);
 			}
+			res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
+			res.setHeader("Access-Control-Allow-Credentials", "include"); // Set the header value to "true"
 			return res.send("Successfully Authenticated");
 		});
 	})(req, res, next);
@@ -154,7 +159,9 @@ app.post("/register", async (req, res) => {
 });
 
 app.get("/user", (req, res) => {
+	console.log("user is called");
 	res.send(req.user);
+	console.log(req.user);
 });
 
 sequelize
