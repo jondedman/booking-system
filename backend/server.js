@@ -62,7 +62,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
 	cors({
-		origin: "http://localhost:5173", // <-- location of the React app you're connecting to
+		origin: "http://127.0.0.1:5174", // <-- location of the React app you're connecting to
 		credentials: true,
 	})
 );
