@@ -1,7 +1,18 @@
 "use strict";
 // note - for further fake data i may ned to reinstall faker from the  new communtiy version.
 const faker = require("faker");
-const { User, Customer, Vehicle, Booking } = require("../models");
+// const { User, Customer, Vehicle, Booking } = require("../models/index");
+const User = require("../models/user");
+const Customer = require("../models/customer");
+const Vehicle = require("../models/vehicle");
+const Booking = require("../models/booking");
+// console.log("Sequelize instance in seed file:", Sequelize);
+const { sequelize, Sequelize } = require("../models/index");
+console.log("Sequelize instance in seed file:", User);
+console.log("Sequelize instance in seed file:", Customer);
+console.log("Sequelize instance in seed file:", Vehicle);
+console.log("Sequelize instance in seed file:", Booking);
+// console.log("Sequelize instance in seed file:", sequelize);
 const { col } = require("sequelize");
 
 module.exports = {
@@ -9,15 +20,19 @@ module.exports = {
 		// Revert seed logic in reverse order
 		console.log("cleaning up...");
 		// Revert bookings
+		console.log("Reverting bookings...");
 		await Booking.destroy({ where: {} });
 
 		// Revert vehicles
+		console.log("Reverting vehicles...");
 		await Vehicle.destroy({ where: {} });
 
 		// Revert customers
+		console.log("Reverting customers...");
 		await Customer.destroy({ where: {} });
 
 		// Revert users
+		console.log("Reverting users...");
 		await User.destroy({ where: {} });
 
 		// Additional cleanup logic if needed
