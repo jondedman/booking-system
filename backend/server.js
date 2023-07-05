@@ -26,6 +26,7 @@
 // app.listen(port, function () {
 // 	console.log("Server started successfully");
 // });
+console.log("Hello World");
 const express = require("express");
 const cors = require("cors");
 const passport = require("passport");
@@ -40,7 +41,6 @@ const db = require("./models");
 const { Sequelize } = require("sequelize");
 const config = require("./config/config.json")["development"];
 //----------------------------------------- END OF IMPORTS---------------------------------------------------
-
 // Modify the Sequelize and PostgreSQL connection configuration according to your setup
 const sequelize = new Sequelize(
 	config.database,
@@ -50,8 +50,10 @@ const sequelize = new Sequelize(
 		host: config.host,
 		port: config.port,
 		dialect: config.dialect,
+		logging: (msg) => console.log(`[Sequelize]: ${msg}`),
 	}
 );
+console.log(config);
 
 // Define your User model using Sequelize if it's not already defined
 
@@ -79,15 +81,20 @@ app.use(passport.session());
 
 passport.use(
 	new LocalStrategy(async function (username, password, done) {
+		console.log("LocalStrategy is called");
 		try {
-			const user = await User.findOne({ where: { username } });
+			const user = await User.findOne({
+				where: { username },
+				raw: true, // Add the raw option to get the raw data object
+			});
+			console.log(user);
 			if (!user) {
 				return done(null, false, { message: "No User Exists" });
 			}
-			const isPasswordValid = await bcrypt.compare(password, user.password);
-			if (!isPasswordValid) {
-				return done(null, false, { message: "Invalid Password" });
-			}
+			// const isPasswordValid = await bcrypt.compare(password, user.password);
+			// if (!isPasswordValid) {
+			// 	return done(null, false, { message: "Invalid Password" });
+			// }
 			return done(null, user);
 		} catch (error) {
 			return done(error);
@@ -96,6 +103,7 @@ passport.use(
 );
 
 passport.serializeUser(function (user, done) {
+	console.log("serializeUser is called");
 	done(null, user.id);
 });
 
@@ -149,8 +157,20 @@ app.get("/user", (req, res) => {
 	res.send(req.user);
 });
 
+sequelize
+	.authenticate()
+	.then(() => {
+		console.log("Database connection has been established successfully.");
+	})
+	.catch((error) => {
+		console.error("Unable to connect to the database:", error);
+	});
 //----------------------------------------- END OF ROUTES---------------------------------------------------
-
+// Error handling
+app.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).send("Internal Server Error");
+});
 // Start Server
 app.listen(5173, () => {
 	console.log("Server Has Started");

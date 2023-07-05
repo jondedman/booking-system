@@ -54,7 +54,7 @@ function App() {
 				password: registerPassword,
 			},
 			withCredentials: true,
-			url: "http://localhost:4000/register",
+			url: "http://localhost:5173/register",
 		}).then((res) => console.log(res));
 	};
 	const login = () => {
@@ -65,14 +65,14 @@ function App() {
 				password: loginPassword,
 			},
 			withCredentials: true,
-			url: "http://localhost:4000/login",
+			url: "http://localhost:5173/login",
 		}).then((res) => console.log(res));
 	};
 	const getUser = () => {
 		Axios({
 			method: "GET",
 			withCredentials: true,
-			url: "http://localhost:4000/user",
+			url: "http://localhost:5173/user",
 		}).then((res) => {
 			setData(res.data);
 			console.log(res.data);
