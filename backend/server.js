@@ -122,6 +122,14 @@ passport.deserializeUser(async function (id, done) {
 //----------------------------------------- END OF MIDDLEWARE---------------------------------------------------
 
 // Routes
+app.options("/login", (req, res) => {
+	res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+	res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+	res.setHeader("Access-Control-Allow-Credentials", "true");
+	res.sendStatus(200);
+});
+
 app.post("/login", (req, res, next) => {
 	passport.authenticate("local", (err, user, info) => {
 		if (err) {
@@ -135,7 +143,7 @@ app.post("/login", (req, res, next) => {
 				return next(err);
 			}
 			res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
-			res.setHeader("Access-Control-Allow-Credentials", "include"); // Set the header value to "true"
+			res.setHeader("Access-Control-Allow-Credentials", "true");
 			return res.send("Successfully Authenticated");
 		});
 	})(req, res, next);
