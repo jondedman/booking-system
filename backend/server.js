@@ -40,6 +40,7 @@ const { User } = require("./models"); // Assuming your User model is exported as
 const db = require("./models");
 const { Sequelize } = require("sequelize");
 const config = require("./config/config.json")["development"];
+const passportConfig = require("./passportConfig");
 //----------------------------------------- END OF IMPORTS---------------------------------------------------
 // Modify the Sequelize and PostgreSQL connection configuration according to your setup
 const sequelize = new Sequelize(
@@ -80,28 +81,9 @@ app.use(cookieParser("secretcode"));
 app.use(passport.initialize());
 app.use(passport.session());
 
-passport.use(
-	new LocalStrategy(async function (username, password, done) {
-		console.log("LocalStrategy is called");
-		try {
-			const user = await User.findOne({
-				where: { username },
-				raw: true, // Add the raw option to get the raw data object
-			});
-			console.log(user);
-			if (!user) {
-				return done(null, false, { message: "No User Exists" });
-			}
-			// const isPasswordValid = await bcrypt.compare(password, user.password);
-			// if (!isPasswordValid) {
-			// 	return done(null, false, { message: "Invalid Password" });
-			// }
-			return done(null, user);
-		} catch (error) {
-			return done(error);
-		}
-	})
-);
+app.use(passport.initialize());
+app.use(passport.session());
+passportConfig(passport);
 
 passport.serializeUser(function (user, done) {
 	console.log("serializeUser is called");
@@ -151,7 +133,7 @@ app.post("/login", (req, res, next) => {
 
 app.post("/register", async (req, res) => {
 	try {
-		const hashedPassword = await bcrypt.hash(req.body.password, 10);
+		const hashedPassword = await bcrypt.hash(req.body.password, 9);
 
 		const newUser = await User.create({
 			username: req.body.username,
@@ -159,11 +141,6 @@ app.post("/register", async (req, res) => {
 			password: hashedPassword,
 		});
 
-		// 	res.send("User Created");
-		// } catch (error) {
-		// 	console.error(error);
-		// 	res.send("Error occurred during user registration");
-		// }
 		res.send("User Created");
 	} catch (error) {
 		console.error(error);
