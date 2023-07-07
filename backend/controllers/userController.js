@@ -7,7 +7,12 @@ const passportConfig = require("../passportConfig");
 passportConfig(passport);
 
 exports.login = (req, res, next) => {
+	console.log("login is called");
 	passport.authenticate("local", (err, user, info) => {
+		console.log("authenticate is called");
+		console.log("err:", err);
+		console.log("user:", user);
+		console.log("info:", info);
 		if (err) {
 			return next(err);
 		}
@@ -18,6 +23,7 @@ exports.login = (req, res, next) => {
 			if (err) {
 				return next(err);
 			}
+			console.log("User session created and stored:", req.user);
 			res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
 			res.setHeader("Access-Control-Allow-Credentials", "true");
 			return res.send("Successfully Authenticated");
@@ -27,7 +33,7 @@ exports.login = (req, res, next) => {
 
 exports.register = async (req, res, next) => {
 	try {
-		const hashedPassword = await bcrypt.hash(req.body.password, 10);
+		const hashedPassword = await bcrypt.hash(req.body.password, 9);
 
 		const newUser = await User.create({
 			username: req.body.username,
@@ -45,5 +51,5 @@ exports.register = async (req, res, next) => {
 exports.getUser = (req, res) => {
 	console.log("user is called");
 	res.send(req.user);
-	console.log(req.user);
+	console.log("req.user:", req.user);
 };

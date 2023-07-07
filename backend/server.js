@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
 const { sequelize } = require("./models");
+const passportConfig = require("./passportConfig");
 
 const app = express();
 const PORT = 5173;
@@ -24,6 +25,9 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Initialize Passport.js configuration
+passportConfig(passport);
 
 // Routes
 app.use("/users", userRoutes);

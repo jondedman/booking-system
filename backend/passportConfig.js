@@ -32,12 +32,17 @@ module.exports = function (passport) {
 	);
 
 	passport.serializeUser(function (user, done) {
+		console.log("serializeUser");
+		console.log(user);
 		done(null, user.id);
+		console.log(user.id);
 	});
 
 	passport.deserializeUser(async function (id, done) {
+		console.log("deserializeUser");
 		try {
 			const user = await User.findByPk(id);
+			console.log(user);
 			done(null, user);
 		} catch (error) {
 			done(error);
