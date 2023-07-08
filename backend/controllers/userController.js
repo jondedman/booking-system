@@ -27,13 +27,21 @@ exports.register = async (req, res, next) => {
 		const password = req.body.password;
 
 		if (!password || password.length < 8) {
-			// Password is blank or too short
 			return res
 				.status(400)
 				.json({ message: "Password must be at least 8 characters long" });
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 9);
+
+		const existingUser = await User.findOne({
+			where: { username: req.body.username },
+		});
+
+		if (existingUser) {
+			return res.status(400).json({ message: "Username is already taken" });
+		}
+
 		const newUser = await User.create({
 			username: req.body.username,
 			email: req.body.email,
@@ -43,7 +51,6 @@ exports.register = async (req, res, next) => {
 		res.json({ message: "User created successfully" });
 	} catch (error) {
 		if (error.name === "SequelizeValidationError") {
-			// Handle validation errors
 			const errors = error.errors.map((err) => ({
 				field: err.path,
 				message: err.message,
