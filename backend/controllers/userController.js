@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const { User } = require("../models");
-const { getMessage } = require("../passportConfig"); // Import the getMessage function from passportConfig
+// const { getMessage } = require("../passportConfig"); // Import the getMessage function from passportConfig
 
 exports.login = (req, res, next) => {
 	passport.authenticate("local", (err, user, info) => {
@@ -42,7 +42,7 @@ exports.register = async (req, res, next) => {
 			return res.status(400).json({ message: "Username is already taken" });
 		}
 
-		const newUser = await User.create({
+		await User.create({
 			username: req.body.username,
 			email: req.body.email,
 			password: hashedPassword,
@@ -67,12 +67,8 @@ exports.getUser = (req, res) => {
 	if (!req.user) {
 		return res.status(401).json({ error: "User not authenticated" }); // Send error message as JSON
 	}
-	res.json(req.user); // Send user data as JSON
+	res.json({ username: req.user.username }); // Send user data as JSON
 };
-
-// User Controller
-
-// userController.js
 
 exports.logout = (req, res) => {
 	req.logout(() => {
