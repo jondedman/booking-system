@@ -69,3 +69,14 @@ exports.getUser = (req, res) => {
 	}
 	res.json(req.user); // Send user data as JSON
 };
+
+// User Controller
+
+// userController.js
+
+exports.logout = (req, res) => {
+	req.logout(() => {
+		// After logout, you can perform any additional actions or send a response
+		res.json({ message: "Logout successful" });
+	});
+};
