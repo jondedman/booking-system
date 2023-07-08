@@ -67,7 +67,11 @@ exports.getUser = (req, res) => {
 	if (!req.user) {
 		return res.status(401).json({ error: "User not authenticated" }); // Send error message as JSON
 	}
-	res.json({ username: req.user.username }); // Send user data as JSON
+	res.json({
+		username: req.user.username,
+		email: req.user.email,
+		id: req.user.id,
+	}); // Send user data as JSON - limited to username only for now. id and email can be sent as well
 };
 
 exports.logout = (req, res) => {
