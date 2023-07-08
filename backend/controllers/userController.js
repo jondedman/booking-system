@@ -24,12 +24,22 @@ exports.login = (req, res, next) => {
 
 exports.register = async (req, res, next) => {
 	try {
-		const hashedPassword = await bcrypt.hash(req.body.password, 9);
+		const password = req.body.password;
+
+		if (!password || password.length < 8) {
+			// Password is blank or too short
+			return res
+				.status(400)
+				.json({ message: "Password must be at least 8 characters long" });
+		}
+
+		const hashedPassword = await bcrypt.hash(password, 9);
 		const newUser = await User.create({
 			username: req.body.username,
 			email: req.body.email,
 			password: hashedPassword,
 		});
+
 		res.json({ message: "User created successfully" });
 	} catch (error) {
 		if (error.name === "SequelizeValidationError") {
