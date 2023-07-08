@@ -32,10 +32,24 @@ function App() {
 			},
 			withCredentials: true,
 			url: "http://localhost:5173/users/login",
-		}).then((res) => {
-			console.log(res);
-			getUser(); // Call getUser after successful login
-		});
+		})
+			.then((res) => {
+				console.log(res);
+				getUser(); // Call getUser after successful login
+			})
+			.catch((error) => {
+				console.error(error);
+				if (
+					error.response &&
+					error.response.data &&
+					error.response.data.message
+				) {
+					console.log("Error message:", error.response.data.message);
+					window.alert(error.response.data.message);
+				} else {
+					window.alert("An error occurred during login. Please try again.");
+				}
+			});
 	};
 
 	const getUser = () => {
