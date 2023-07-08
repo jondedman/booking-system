@@ -1,4 +1,5 @@
 "use strict";
+const bcrypt = require("bcryptjs");
 // note - for further fake data i may ned to reinstall faker from the  new communtiy version.
 const faker = require("faker");
 const { User, Customer, Vehicle, Booking } = require("../models");
@@ -27,10 +28,11 @@ module.exports = {
 			console.log("Seeding users...");
 			const usersData = [];
 			for (let i = 0; i < 5; i++) {
+				const hashedPassword = await bcrypt.hash("12345678", 9);
 				usersData.push({
 					username: faker.internet.userName(),
 					email: faker.internet.email(),
-					password: "12345678",
+					password: hashedPassword,
 				});
 			}
 			await User.bulkCreate(usersData);
