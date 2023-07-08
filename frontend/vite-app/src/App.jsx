@@ -20,7 +20,27 @@ function App() {
 			},
 			withCredentials: true,
 			url: "http://localhost:5173/users/register",
-		}).then((res) => console.log(res));
+		})
+			.then((res) => {
+				console.log(res);
+				// Registration successful, handle success response
+			})
+			.catch((error) => {
+				console.error(error);
+				if (
+					error.response &&
+					error.response.data &&
+					error.response.data.errors
+				) {
+					const validationErrors = error.response.data.errors;
+					// Display validation errors to the user
+					validationErrors.forEach((err) => {
+						window.alert(`${err.field}: ${err.message}`);
+					});
+				} else {
+					window.alert("An error occurred during registration.");
+				}
+			});
 	};
 
 	const login = () => {

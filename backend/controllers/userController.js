@@ -30,10 +30,19 @@ exports.register = async (req, res, next) => {
 			email: req.body.email,
 			password: hashedPassword,
 		});
-		res.json({ message: "User created successfully" }); // Send success message as JSON
+		res.json({ message: "User created successfully" });
 	} catch (error) {
-		console.error(error);
-		res.status(500).json({ error: error.message }); // Send error message as JSON
+		if (error.name === "SequelizeValidationError") {
+			// Handle validation errors
+			const errors = error.errors.map((err) => ({
+				field: err.path,
+				message: err.message,
+			}));
+			res.status(400).json({ errors });
+		} else {
+			console.error(error);
+			res.status(500).send("Internal Server Error");
+		}
 	}
 };
 
