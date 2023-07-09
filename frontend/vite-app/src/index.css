@@ -89,6 +89,13 @@ code {
 		monospace;
 }
 
+.root {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
+	text-align: center;
+}
+
 html,
 body {
 	height: 100%;
@@ -448,4 +455,13 @@ i {
 	align-items: center;
 	justify-content: center;
 	width: 100%;
+}
+
+#login-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	text-align: center;
 }

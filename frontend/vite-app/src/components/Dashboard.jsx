@@ -1,6 +1,7 @@
-// Purpose: Root component for the application. adapt all headings and hrefs once working
+// Purpose: Dashboard component for the application. adapt all headings and hrefs once working
 import { Outlet, Link } from "react-router-dom";
-export default function Root() {
+import "../index.css";
+export default function Dashboard() {
 	return (
 		<>
 			<div id="sidebar">

@@ -1,12 +1,15 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = ({ onLogin }) => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const navigate = useNavigate();
 
 	const handleLogin = () => {
 		onLogin(username, password);
+		navigate("/dashboard"); // Navigate to /dashboard after successful login
 	};
 
 	return (
