@@ -5,6 +5,7 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 const { sequelize } = require("./models");
 const passportConfig = require("./passportConfig");
 
@@ -31,6 +32,7 @@ passportConfig(passport);
 
 // Routes
 app.use("/users", userRoutes);
+app.use("/bookings", bookingRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {
