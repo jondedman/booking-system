@@ -1,25 +1,28 @@
 const { sequelize } = require("../models/index");
 const { Booking } = sequelize.models;
+console.log("bookingController");
+const { Customer, Vehicle, User } = require("../models/index");
 
 // Controller methods
 exports.getAllBookings = async (req, res) => {
 	console.log("getAllBookings1");
 	try {
 		console.log("getAllBookings2");
-		const bookings = await Booking.findAll();
+		const bookings = await Booking.findAll({
+			include: [Customer, Vehicle, User],
+		});
 		console.log(bookings);
-
-		// Test code for accessing a specific booking
-		const cust = await Booking.findOne({ where: { id: 1157 } });
-		console.log("Test booking:");
-		console.log(cust);
-
 		res.json(bookings);
 	} catch (error) {
-		// console.log("Error in getAllBookings:", error);
+		console.log("Error in getAllBookings:", error);
 		res.status(500).json({ error: "Internal server error" });
 	}
 };
+
+// Test code for accessing a specific booking
+// const cust = await Booking.findOne({ where: { id: 1157 } });
+// console.log("Test booking:");
+// console.log(cust);
 
 exports.getBookingById = async (req, res) => {
 	const { id } = req.params;
