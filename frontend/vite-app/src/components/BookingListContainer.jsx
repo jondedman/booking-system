@@ -50,9 +50,17 @@ function BookingList() {
 									booking.Vehicle.registration}
 							</span>
 						)}
+						<span>{`Mot: ${booking.mot} Repair: ${booking.repair} Diagnostic: ${booking.diagnostic}`}</span>
+
 						{booking.User && (
 							<span style={{ marginLeft: "10px" }}>
-								Booked by: {booking.User.username}
+								Booked by:{" "}
+								{booking.User.username +
+									" " +
+									"on" +
+									" " +
+									formatBookingDate(booking.createdAt) +
+									" "}
 							</span>
 						)}
 					</li>
