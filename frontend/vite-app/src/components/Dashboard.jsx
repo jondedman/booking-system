@@ -14,7 +14,6 @@ export default function Dashboard() {
 		<>
 			<div id="sidebar">
 				<button onClick={handleLogout}>Logout</button>
-				<BookingList />
 				<div>
 					<form id="search-form" role="search">
 						<input
@@ -43,6 +42,7 @@ export default function Dashboard() {
 				</nav>
 			</div>
 			<div id="detail">
+				<BookingList />
 				<Outlet />
 			</div>
 		</>
