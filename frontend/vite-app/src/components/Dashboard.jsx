@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import "../index.css";
 import UserComponent from "./UserComponent";
+import BookingList from "./BookingListContainer";
 
 export default function Dashboard() {
 	const { logout } = UserComponent();
@@ -13,6 +14,7 @@ export default function Dashboard() {
 		<>
 			<div id="sidebar">
 				<button onClick={handleLogout}>Logout</button>
+				<BookingList />
 				<div>
 					<form id="search-form" role="search">
 						<input

@@ -1,3 +1,4 @@
+// adapt to booking show page
 import { Form } from "react-router-dom";
 
 export default function Contact() {
