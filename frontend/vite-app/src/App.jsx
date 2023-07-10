@@ -15,11 +15,11 @@ function App() {
 		<div id="login-form">
 			<RegistrationForm onRegister={register} />
 			<LoginForm onLogin={login} />
-			<GetUserButton onGetUser={getUser} />
+			{/*<GetUserButton onGetUser={getUser} />
 			{/* Pass data as a prop */}
 			{data && <UserGreeting username={data.username} />}
 			<LogoutButton onLogout={logout} />
-			{error && <p className="error-message">{error}</p>}
+			{/*{error && <p className="error-message">{error}</p>}*/}
 		</div>
 	);
 }

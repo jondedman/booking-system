@@ -1,11 +1,18 @@
-// Purpose: Dashboard component for the application. adapt all headings and hrefs once working
 import { Outlet, Link } from "react-router-dom";
 import "../index.css";
+import UserComponent from "./UserComponent";
+
 export default function Dashboard() {
+	const { logout } = UserComponent();
+
+	const handleLogout = () => {
+		logout();
+	};
+
 	return (
 		<>
 			<div id="sidebar">
-				<h1>React Router Contacts</h1>
+				<button onClick={handleLogout}>Logout</button>
 				<div>
 					<form id="search-form" role="search">
 						<input

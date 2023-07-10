@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UserComponent = () => {
 	const [data, setData] = useState(null);
 	const [error, setError] = useState(null);
+	const navigate = useNavigate();
 
 	const register = (username, password, email) => {
 		Axios.post(
@@ -46,6 +48,7 @@ const UserComponent = () => {
 		)
 			.then((res) => {
 				console.log(res);
+				navigate("/dashboard"); // Navigate to the dashboard after successful login
 				getUser(); // Call getUser after successful login
 			})
 			.catch((error) => {
@@ -79,6 +82,7 @@ const UserComponent = () => {
 		Axios.get("http://localhost:5173/users/logout", { withCredentials: true })
 			.then((res) => {
 				console.log(res.data);
+				navigate("/"); // Navigate to the home page after logout
 				window.alert("Logout successful.");
 				setData(null);
 			})
