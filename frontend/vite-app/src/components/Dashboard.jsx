@@ -9,11 +9,10 @@ export default function Dashboard() {
 	const handleLogout = () => {
 		logout();
 	};
-
+	// search bar will need adapting or removing as react table has its own search bar
 	return (
 		<>
 			<div id="sidebar">
-				<button onClick={handleLogout}>Logout</button>
 				<div>
 					<form id="search-form" role="search">
 						<input
@@ -26,17 +25,30 @@ export default function Dashboard() {
 						<div id="search-spinner" aria-hidden hidden={true} />
 						<div className="sr-only" aria-live="polite"></div>
 					</form>
-					<form method="post">
-						<button type="submit">New</button>
-					</form>
+					<form method="post">{/* <button type="submit">New</button> */}</form>
 				</div>
 				<nav>
 					<ul>
 						<li>
-							<Link to={`contacts/1`}>Your Name</Link>
+							<button>Toggle calender/booking view component</button>
 						</li>
 						<li>
-							<Link to={`contacts/2`}>Your Friend</Link>
+							<button>Create Booking component</button>
+						</li>
+						<li>
+							<button>Create customer component</button>
+						</li>
+						<li>
+							<button>View all Customers component</button>
+						</li>
+						<li>
+							<Link to={`contacts/1`}>other link</Link>
+						</li>
+						<li>
+							<Link to={`contacts/2`}>other link</Link>
+						</li>
+						<li>
+							<button onClick={handleLogout}>Logout</button>
 						</li>
 					</ul>
 				</nav>

@@ -31,7 +31,7 @@ function BookingList() {
 
 	return (
 		<div>
-			<h1>Bookings</h1>
+			<h1>Bookings for RD Autos</h1>
 			<ul>
 				{bookings.map((booking) => (
 					<li key={booking.id} style={{ display: "flex" }}>
