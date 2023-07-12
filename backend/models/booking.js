@@ -58,6 +58,21 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
+			endDate: {
+				type: DataTypes.DATE,
+				allowNull: false,
+				validate: {
+					isAfterStartDate(value) {
+						if (value < this.date) {
+							throw new Error(
+								"Booking end date must be after booking start date."
+							);
+						}
+					},
+					notEmpty: false,
+					isDate: true,
+				},
+			},
 			complete: {
 				type: DataTypes.BOOLEAN,
 				allowNull: false,
