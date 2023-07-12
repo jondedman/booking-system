@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Calendar, globalizeLocalizer } from "react-big-calendar";
+import { Calendar, Views, globalizeLocalizer } from "react-big-calendar";
 import { DateTime } from "luxon";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import globalize from "globalize";
@@ -15,15 +15,9 @@ const BigCalendar = ({ bookings }) => {
 		end: new Date(booking.date),
 		allDay: true,
 		title: `Customer: ${booking.Customer.firstName} ${booking.Customer.lastName} - Vehicle: ${booking.Vehicle.make} Reg: ${booking.Vehicle.registration} - Mot:${booking.mot} Repair:${booking.repair} Diagnostic:${booking.diagnostic}`,
-		tooltip: `Customer contact: ${booking.Customer.mobileNumber} Quote: £${booking.quote} - Parts: £${booking.parts} Labour: £${booking.labour} Booked by: ${booking.User.username} `, // create a tooltip property displayed on hover.
-		resource: booking.mot
-			? "Mot"
-			: booking.repair
-			? "Repair"
-			: booking.diagnostic
-			? "Diagnostic"
-			: "Other",
-		// Include other required properties from your 'bookings' object
+		tooltip: `Customer contact: ${booking.Customer.mobileNumber} Quote: £${booking.quote} - Parts: £${booking.parts} Labour: £${booking.labour} Booked by: ${booking.User.username} `, //displays on hover
+		// try to use resources to add a view for mot:
+		// resources: "mot",
 	}));
 
 	return (
@@ -33,6 +27,7 @@ const BigCalendar = ({ bookings }) => {
 				events={transformedBookings}
 				startAccessor="start"
 				endAccessor="end"
+				defaultView={Views.WEEK} // changes default view to week. other options: day, month, agenda
 				components={{
 					event: EventComponent,
 				}}
