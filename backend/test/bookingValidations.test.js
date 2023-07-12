@@ -29,14 +29,15 @@ describe("Booking Model", () => {
 	describe("Validations", () => {
 		// date validations
 
-		test("should not allow booking without a date", async () => {
+		test("should not allow booking without a startDate", async () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
 					mot: true,
 					repair: false,
 					diagnostic: false,
-					// date: "2023-06-22",
+					// startDate: "2023-06-22",
+					endDate: new Date("2023-06-22 10:00:00"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -46,9 +47,35 @@ describe("Booking Model", () => {
 					quote: 450,
 					notes: "test notes",
 				});
-				throw new Error("Expected validation error for missing date");
+				throw new Error("Expected validation error for missing startDate");
 			} catch (error) {
-				expect(error.errors[0].message).toBe("Booking.date cannot be null");
+				expect(error.errors[0].message).toBe(
+					"Booking.startDate cannot be null"
+				);
+			}
+		});
+
+		test("should not allow booking without an endDate", async () => {
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: true,
+					repair: false,
+					diagnostic: false,
+					startDate: new Date("2024-06-22 10:00:00"),
+					// endDate: new Date("2023-06-22 10:00:00"),
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+				throw new Error("Expected validation error for missing endDate");
+			} catch (error) {
+				expect(error.errors[0].message).toBe("Booking.endDate cannot be null");
 			}
 		});
 
@@ -59,8 +86,8 @@ describe("Booking Model", () => {
 					mot: true,
 					repair: false,
 					diagnostic: false,
-					date: new Date("2020-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2020-01-01 10:00:00"),
+					endDate: new Date("2020-01-01 11:00:00"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -78,15 +105,15 @@ describe("Booking Model", () => {
 			}
 		});
 
-		test("date should not be empty", async () => {
+		test("startDate should not be empty", async () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
 					mot: false,
 					repair: true,
 					diagnostic: false,
-					date: "",
-					// time: "10:00:00",
+					startDate: "",
+					endDate: new Date("2025-01-01"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -96,21 +123,23 @@ describe("Booking Model", () => {
 					quote: 450,
 					notes: "test notes",
 				});
-				throw new Error("Expected validation error for empty date");
+				throw new Error("Expected validation error for empty startDate");
 			} catch (error) {
-				expect(error.message).toContain("Validation notEmpty on date failed");
+				expect(error.message).toContain(
+					"Validation notEmpty on startDate failed"
+				);
 			}
 		});
 
-		test("date should be a valid format", async () => {
+		test("startDate should be a valid format", async () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
 					mot: false,
 					repair: true,
 					diagnostic: true,
-					date: "2022-30-02", // Invalid date format
-					// time: "10:00:00",
+					startDate: "2022-30-02", // Invalid date format
+					endDate: new Date("2025-01-01 10:00:00"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -120,10 +149,38 @@ describe("Booking Model", () => {
 					quote: 450,
 					notes: "test notes",
 				});
-				throw new Error("Expected validation error for invalid date format");
+				throw new Error(
+					"Expected validation error for invalid startDate format"
+				);
 			} catch (error) {
 				expect(error.errors[0].message).toBe(
-					"Validation isDate on date failed"
+					"Validation isDate on startDate failed"
+				);
+			}
+		});
+
+		test("endDate should be a valid format", async () => {
+			const { user, customer, vehicle } = await findDetails();
+			try {
+				await Booking.create({
+					mot: false,
+					repair: true,
+					diagnostic: true,
+					startDate: new Date("2025-01-01 10:00:00"),
+					endDate: "2022-30-02", // Invalid date format
+					complete: false,
+					vehicleId: vehicle.id,
+					customerId: customer.id,
+					userId: user.id,
+					parts: 200,
+					labor: 250,
+					quote: 450,
+					notes: "test notes",
+				});
+				throw new Error("Expected validation error for invalid endDate format");
+			} catch (error) {
+				expect(error.errors[0].message).toBe(
+					"Validation isDate on endDate failed"
 				);
 			}
 		});
@@ -139,7 +196,8 @@ describe("Booking Model", () => {
 					mot: true,
 					repair: false,
 					diagnostic: false,
-					date: futureDate,
+					startDate: futureDate,
+					endDate: futureDate,
 					complete: true,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -164,8 +222,8 @@ describe("Booking Model", () => {
 					mot: true,
 					repair: false,
 					diagnostic: false,
-					date: new Date("2025-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2025-01-01 10:00:00"),
+					endDate: new Date("2025-01-01 11:00:00"),
 					vehicleId: vehicle.id,
 					customerId: customer.id,
 					userId: user.id,
@@ -184,11 +242,11 @@ describe("Booking Model", () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
-					mot: true,
-					repair: false,
+					mot: false,
+					repair: true,
 					diagnostic: false,
-					date: new Date("2025-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2025-01-01 10:00:00"),
+					endDate: new Date("2025-01-01 11:00:00"),
 					complete: "not a boolean",
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -211,9 +269,10 @@ describe("Booking Model", () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
-					date: new Date("2025-01-01"),
-					mot: true,
-					repair: false,
+					startDate: new Date("2025-01-01"),
+					endDate: new Date("2025-01-01"),
+					mot: false,
+					repair: true,
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -235,7 +294,8 @@ describe("Booking Model", () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
-					date: new Date("2025-01-01"),
+					startDate: new Date("2025-01-01 10:00:00"),
+					endDate: new Date("2025-01-01 11:00:00"),
 					repair: true,
 					diagnostic: true,
 					complete: false,
@@ -259,7 +319,8 @@ describe("Booking Model", () => {
 			const { user, customer, vehicle } = await findDetails();
 			try {
 				await Booking.create({
-					date: new Date("2025-01-01"),
+					startDate: new Date("2025-01-01"),
+					endDate: new Date("2025-01-01"),
 					mot: true,
 					diagnostic: true,
 					complete: false,
@@ -286,8 +347,8 @@ describe("Booking Model", () => {
 					repair: false,
 					mot: "not a boolean",
 					diagnostic: true,
-					date: new Date("2025-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2025-01-01 10:00:00"),
+					endDate: new Date("2025-01-01 11:00:00"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -312,8 +373,8 @@ describe("Booking Model", () => {
 					mot: false,
 					repair: "not a boolean",
 					diagnostic: true,
-					date: new Date("2025-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2025-01-01"),
+					endDate: new Date("2025-01-01"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -338,8 +399,8 @@ describe("Booking Model", () => {
 					mot: false,
 					repair: true,
 					diagnostic: "not a boolean",
-					date: new Date("2025-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2025-01-01"),
+					endDate: new Date("2025-01-01"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -373,7 +434,8 @@ describe("Booking Model", () => {
 				mot: true,
 				repair: true,
 				diagnostic: false,
-				date: new Date("2025-01-01"),
+				startDate: new Date("2025-01-01 10:00:00"),
+				endDate: new Date("2025-01-01 11:00:00"),
 				complete: false,
 				vehicleId: vehicle.id,
 				customerId: customer.id,
@@ -410,8 +472,8 @@ describe("Booking Model", () => {
 					mot: false,
 					repair: true,
 					diagnostic: false,
-					date: new Date("2025-01-01"),
-					// time: "10:00:00",
+					startDate: new Date("2025-01-01"),
+					endDate: new Date("2025-01-01"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
@@ -447,8 +509,8 @@ describe("Booking Model", () => {
 				mot: true,
 				repair: false,
 				diagnostic: false,
-				date: new Date("2025-01-01"),
-				// time: "10:00:00",
+				startDate: new Date("2025-01-01"),
+				endDate: new Date("2025-01-01"),
 				complete: false,
 				vehicleId: vehicle.id,
 				customerId: customer.id,
@@ -488,7 +550,8 @@ describe("Booking Model", () => {
 					mot: false,
 					repair: false,
 					diagnostic: false,
-					date: new Date("2025-01-01"),
+					startdate: new Date("2025-01-01"),
+					endDate: new Date("2025-01-01"),
 					complete: false,
 					vehicleId: vehicle.id,
 					customerId: customer.id,
