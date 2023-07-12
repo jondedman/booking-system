@@ -12,6 +12,7 @@
 		"express-session": "^1.17.3",
 		"faker": "^5.5.3",
 		"inspirational-quotes": "^2.0.1",
+		"luxon": "^3.3.0",
 		"passport": "^0.6.0",
 		"passport-local": "^1.0.0",
 		"pg": "^8.11.0",

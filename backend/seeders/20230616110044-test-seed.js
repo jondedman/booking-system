@@ -2,6 +2,7 @@
 const bcrypt = require("bcryptjs");
 // note - for further fake data i may ned to reinstall faker from the  new communtiy version.
 const faker = require("faker");
+const { DateTime } = require("luxon");
 const { User, Customer, Vehicle, Booking } = require("../models");
 const { col } = require("sequelize");
 
@@ -41,17 +42,19 @@ module.exports = {
 			console.log("Seeding customers...");
 			const customersData = [];
 			const users = await User.findAll();
-			for (const user of users) {
-				customersData.push({
-					userId: user.id,
-					firstName: faker.name.firstName(),
-					lastName: faker.name.lastName(),
-					email: faker.internet.email(),
-					mobileNumber: faker.phone.phoneNumber(),
-					address: faker.address.streetAddress(),
-					postcode: faker.address.zipCode(),
-					notes: faker.lorem.sentence(),
-				});
+			for (let i = 0; i < 25; i++) {
+				for (const user of users) {
+					customersData.push({
+						userId: user.id,
+						firstName: faker.name.firstName(),
+						lastName: faker.name.lastName(),
+						email: faker.internet.email(),
+						mobileNumber: faker.phone.phoneNumber(),
+						address: faker.address.streetAddress(),
+						postcode: faker.address.zipCode(),
+						notes: faker.lorem.sentence(),
+					});
+				}
 			}
 			await Customer.bulkCreate(customersData);
 		})();
@@ -100,16 +103,19 @@ module.exports = {
 			console.log("Seeding bookings...");
 			const bookingsData = [];
 			const vehicles = await Vehicle.findAll();
-			const users = await User.findAll(); // Fetch all users from the database
+			const users = await User.findAll();
 			for (const vehicle of vehicles) {
-				const randomUser = users[Math.floor(Math.random() * users.length)]; // Select a random user from the fetched users
+				const randomUser = users[Math.floor(Math.random() * users.length)];
+				const startDate = faker.date.future();
+				const endDate = DateTime.fromJSDate(startDate)
+					.plus({ hours: 1 })
+					.toJSDate(); // Add 1 hour to the startDate
 				bookingsData.push({
 					vehicleId: vehicle.id,
 					customerId: vehicle.customerId,
-					userId: randomUser.id, // Assign the id of the random user
-					date: faker.date.future(),
-					// note this is depreacted, but use it for now
-					// time: faker.time.recent("abbr"),
+					userId: randomUser.id,
+					startDate: startDate,
+					endDate: endDate,
 					mot: faker.datatype.boolean(),
 					repair: faker.datatype.boolean(),
 					diagnostic: faker.datatype.boolean(),
