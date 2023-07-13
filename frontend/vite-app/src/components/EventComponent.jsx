@@ -12,13 +12,22 @@ const EventComponent = ({ event }) => {
 		setShowTooltip(false);
 	};
 
+	const getTitleStyle = () => {
+		if (showTooltip) {
+			return { height: "20%" };
+		}
+		return null;
+	};
+
 	return (
 		<div
 			className="event-container"
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
 		>
-			{event.title}
+			<div className="title" style={getTitleStyle()}>
+				{event.title}
+			</div>
 			{showTooltip && <div className="tooltip">{event.tooltip}</div>}
 		</div>
 	);

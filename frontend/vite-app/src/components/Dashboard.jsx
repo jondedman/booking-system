@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet, Route, Routes } from "react-router-dom";
 import UserComponent from "./UserComponent";
 import BookingsFetcher from "./BookingsFetcher";
 import BigCalendar from "./BigCalendar";
+import CustomerList from "../routes/CustomerList";
 
 export default function Dashboard() {
 	const { logout } = UserComponent();
@@ -10,6 +11,8 @@ export default function Dashboard() {
 	const handleLogout = () => {
 		logout();
 	};
+
+	const bookings = BookingsFetcher(); // Fetch bookings data
 
 	return (
 		<>
@@ -31,7 +34,7 @@ export default function Dashboard() {
 							<button>View all Customers component</button>
 						</li>
 						<li>
-							<Link to={`contacts/1`}>other link</Link>
+							<Link to="/dashboard/customerList">Customer List</Link>
 						</li>
 						<li>
 							<Link to={`contacts/2`}>other link</Link>
@@ -43,7 +46,10 @@ export default function Dashboard() {
 				</nav>
 			</div>
 			<div id="detail">
-				<BigCalendar bookings={BookingsFetcher()} />
+				<Routes>
+					<Route path="/" element={<BigCalendar bookings={bookings} />} />
+					<Route path="customerList" element={<CustomerList />} />
+				</Routes>
 			</div>
 		</>
 	);

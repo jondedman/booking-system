@@ -21,7 +21,7 @@ const BigCalendar = ({ bookings }) => {
 			: `Customer: ${booking.Customer.firstName} ${booking.Customer.lastName} | Type: ${booking.Vehicle.type} Make: ${booking.Vehicle.make} Reg: ${booking.Vehicle.registration}`,
 		resourceId: booking.mot ? "mot" : "workshop",
 		tooltip: booking.mot
-			? `Customer: ${booking.Customer.firstName} ${booking.Customer.lastName} - Vehicle: ${booking.Vehicle.make} Reg: ${booking.Vehicle.registration} - Mot:${booking.mot} Repair:${booking.repair} Diagnostic:${booking.diagnostic}`
+			? `Customer: ${booking.Customer.firstName} `
 			: `Customer: ${booking.Customer.firstName} Contact: ${booking.Customer.mobileNumber} Vehicle: ${booking.Vehicle.make} Reg: ${booking.Vehicle.registration} - Repair:${booking.repair} Diagnostic:${booking.diagnostic} Quote: ${booking.quote} parts: ${booking.parts} labour: ${booking.labour} complete? ${booking.complete}`,
 	}));
 

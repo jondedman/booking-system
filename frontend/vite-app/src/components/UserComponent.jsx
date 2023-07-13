@@ -41,6 +41,7 @@ const UserComponent = () => {
 	};
 
 	const login = (username, password) => {
+		console.log("login");
 		Axios.post(
 			"http://localhost:5173/users/login",
 			{ username, password },
@@ -48,7 +49,9 @@ const UserComponent = () => {
 		)
 			.then((res) => {
 				console.log(res);
+				console.log("navigating...");
 				navigate("/dashboard"); // Navigate to the dashboard after successful login
+				console.log("navigated");
 				getUser(); // Call getUser after successful login
 			})
 			.catch((error) => {

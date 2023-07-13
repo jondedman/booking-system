@@ -1,10 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import App from "./App";
+import {
+	createBrowserRouter,
+	RouterProvider,
+	Route,
+	Routes,
+	Outlet,
+	Link,
+} from "react-router-dom";
+import App from "./routes/App";
 import "./index.css";
 import Dashboard from "./components/Dashboard";
 import ErrorPage from "./components/ErrorPage";
+import CustomerList from "./routes/CustomerList";
 
 const router = createBrowserRouter([
 	{
@@ -13,8 +21,15 @@ const router = createBrowserRouter([
 		errorElement: <ErrorPage />,
 	},
 	{
-		path: "/dashboard",
+		path: "/dashboard/*",
 		element: <Dashboard />,
+		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: "customerList",
+				element: <CustomerList />,
+			},
+		],
 	},
 ]);
 
