@@ -2,6 +2,26 @@ const { sequelize } = require("../models/index");
 const { Customer } = sequelize.models;
 
 // Controller methods
+
+exports.getAllCustomersWithVehiclesAndBookings = async (req, res) => {
+	console.log("getAllCustomersWithVehiclesAndBookings");
+	try {
+		const customers = await Customer.findAll({
+			include: [
+				{
+					model: Vehicle,
+					include: [Booking],
+				},
+			],
+		});
+
+		res.json(customers);
+	} catch (error) {
+		console.error("Error fetching customers:", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
+
 exports.getAllCustomers = async (req, res) => {
 	console.log("getAllCustomers1");
 	try {
