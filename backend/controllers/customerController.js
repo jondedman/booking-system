@@ -1,10 +1,12 @@
 const { sequelize } = require("../models/index");
 const { Customer } = sequelize.models;
+const { Vehicle, Booking, User } = require("../models/index");
 
 // Controller methods
+console.log("customerController.js");
 
-exports.getAllCustomersWithVehiclesAndBookings = async (req, res) => {
-	console.log("getAllCustomersWithVehiclesAndBookings");
+exports.getAllCustomersDetails = async (req, res) => {
+	console.log("getAllCustomersDetails");
 	try {
 		const customers = await Customer.findAll({
 			include: [
@@ -42,9 +44,10 @@ exports.getAllCustomers = async (req, res) => {
 };
 
 exports.getCustomerById = async (req, res) => {
+	console.log("getCustomerById1");
 	const { id } = req.params;
 	try {
-		console.log("getCustomerById:", id);
+		// console.log("getCustomerById:", id);
 		const customer = await Customer.findByPk(id);
 		console.log("Customer:", customer);
 		if (!customer) {
