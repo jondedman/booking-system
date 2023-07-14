@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, Outlet, Route, Routes } from "react-router-dom";
 import UserComponent from "./UserComponent";
-import BookingsFetcher from "./BookingsFetcher";
 import BigCalendar from "./BigCalendar";
 import CustomerList from "../routes/CustomerList";
+import BookingsFetcher from "./BookingsFetcher";
+import CustomersFetcher from "./CustomersFetcher";
 
 export default function Dashboard() {
 	const { logout } = UserComponent();
@@ -12,7 +13,8 @@ export default function Dashboard() {
 		logout();
 	};
 
-	const bookings = BookingsFetcher(); // Fetch bookings data
+	const bookings = BookingsFetcher; // Fetch bookings data
+	const customers = CustomersFetcher; // Fetch customers data
 
 	return (
 		<>
@@ -47,8 +49,13 @@ export default function Dashboard() {
 			</div>
 			<div id="detail">
 				<Routes>
-					<Route path="/" element={<BigCalendar bookings={bookings} />} />
-					<Route path="customerList" element={<CustomerList />} />
+					<Route path="/" element={<BigCalendar bookings={bookings()} />} />
+					{customers() && (
+						<Route
+							path="customerList"
+							element={<CustomerList customers={customers()} />}
+						/>
+					)}
 				</Routes>
 			</div>
 		</>

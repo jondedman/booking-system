@@ -94,9 +94,9 @@ const UserComponent = () => {
 			});
 	};
 
-	useEffect(() => {
-		getUser(); // Call getUser when the component mounts
-	}, []);
+	// useEffect(() => {
+	// 	getUser(); // Call getUser when the component mounts
+	// }, []);
 
 	return {
 		data,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { DateTime } from "luxon";
-
+// note this and bookings fetcher are calling the same api twice. This is not ideal and should be refactored. see customer fethcher and list for example
 function BookingList() {
 	const [bookings, setBookings] = useState([]);
 

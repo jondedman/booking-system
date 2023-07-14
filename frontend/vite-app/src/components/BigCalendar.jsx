@@ -12,6 +12,10 @@ localizer.startOfWeek = function () {
 };
 
 const BigCalendar = ({ bookings }) => {
+	// if (bookings === null) {
+	// 	// Render a loading state or placeholder
+	// 	return <div>Loading...</div>;
+
 	const transformedBookings = bookings.map((booking) => ({
 		start: DateTime.fromISO(booking.startDate).toJSDate(),
 		end: DateTime.fromISO(booking.endDate).toJSDate(),
