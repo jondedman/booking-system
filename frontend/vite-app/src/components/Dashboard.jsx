@@ -1,10 +1,11 @@
+console.log("Mounting Dashboard.jsx... <Dashboard />");
 import React, { useEffect, useState } from "react";
 import { Link, Outlet, Route, Routes } from "react-router-dom";
 import UserComponent from "./UserComponent";
 import BigCalendar from "./BigCalendar";
 import CustomerList from "../routes/CustomerList";
-import BookingsFetcher from "./BookingsFetcher";
-import CustomersFetcher from "./CustomersFetcher";
+import useBookingsFetcher from "./BookingsFetcher";
+import useCustomersFetcher from "./CustomersFetcher";
 
 export default function Dashboard() {
 	const { logout } = UserComponent();
@@ -13,8 +14,8 @@ export default function Dashboard() {
 		logout();
 	};
 
-	const bookings = BookingsFetcher; // Fetch bookings data
-	const customers = CustomersFetcher; // Fetch customers data
+	const bookings = useBookingsFetcher(); // Fetch bookings data
+	const customers = useCustomersFetcher(); // Fetch customers data
 
 	return (
 		<>
@@ -39,7 +40,7 @@ export default function Dashboard() {
 							<Link to="/dashboard/customerList">Customer List</Link>
 						</li>
 						<li>
-							<Link to={`contacts/2`}>other link</Link>
+							<Link to={`/dashboard/contacts/2`}>other link</Link>
 						</li>
 						<li>
 							<button onClick={handleLogout}>Logout</button>
@@ -49,11 +50,11 @@ export default function Dashboard() {
 			</div>
 			<div id="detail">
 				<Routes>
-					<Route path="/" element={<BigCalendar bookings={bookings()} />} />
-					{customers() && (
+					<Route path="/" element={<BigCalendar bookings={bookings} />} end />
+					{customers && (
 						<Route
 							path="customerList"
-							element={<CustomerList customers={customers()} />}
+							element={<CustomerList customers={customers} />}
 						/>
 					)}
 				</Routes>
